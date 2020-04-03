@@ -1,0 +1,44 @@
+{
+  "name": "cosmological-redshift-simulator",
+  "version": "0.1.0",
+  "description": "Cosmological Redshift Simulator",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "serve": "webpack-dev-server --mode development",
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "eslint": "eslint src/*.jsx"
+  },
+  "keywords": [
+    "astronomy"
+  ],
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "d3": "~5.15.0",
+    "eslint-plugin-security": "^1.4.0",
+    "pixi.js": "^5.2.1",
+    "react": "~16.13.0",
+    "react-dom": "~16.13.0",
+    "react-range-step-input": "^1.2.4",
+    "d3-selection": "latest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.0.0",
+    "eslint": "^6.1.0",
+    "eslint-plugin-react": "~7.19.0",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "babel": {
+    "presets": [
+      "@babel/env",
+      "@babel/react"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>
+        Cosmological Redshift Simulator
+    </title>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+</head>
+
+<body>
+
+<div class="container">
+    <div id="sim-container"></div>
+</div>
+
+<div aria-hidden="true" aria-labelledby="helpModalLabel" class="modal" id="helpModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="helpModalLabel">
+                    Help
+                </h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This simulator does redshift stuff</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div aria-hidden="true" aria-labelledby="aboutModalLabel" class="modal" id="aboutModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aboutModalLabel">
+                    About
+                </h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="sim-version">
+                    <i>Funding for Foothill AstroSims provided by an Equity & Innovation Grant from Foothill College.</i>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="dist/bundle.js">
+</script>
+</body>
+
+</html>
