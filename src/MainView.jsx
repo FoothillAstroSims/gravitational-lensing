@@ -42,7 +42,7 @@ export default class MainView extends React.Component {
             me.rectangle = me.drawRectangle();
             me.description = me.drawLabel('View from Earth', 275, 525);
             me.line = me.drawLine();
-            me.start();
+            // me.start();
         });
     }
 
@@ -165,14 +165,26 @@ export default class MainView extends React.Component {
         return line;
     }
 
-    /*
-    updateLine() {
-        if (this.props.settings.showCluster) {
-            this.line.clear();
-        } else {
-            this.drawLine();
-        }
+    // You don't need an animate function. In fact, componentDidUpdate()
+    // is much better since it's controlled by React (and probably more efficient)
+    // componentDidUpdate() essentially runs every time the parent (in this case, main.jsx) has its state variables
+    // changed. Since you passed in the settings, it will run every time settings gets changed
+    componentDidUpdate() {
+        this.updateLine();
     }
-    */
+
+    updateLine() {
+        /**
+         * This is what you had before.
+         */
+        // if (this.props.settings.showCluster) {
+        //     this.line.clear();
+        // } else {
+        //     this.drawLine();
+        // }
+
+        // This works for anything :)
+        this.line.visible = this.props.settings.showCluster;
+    }
 }
 
