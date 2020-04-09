@@ -1,163 +1,77 @@
-html body {
-    /*background-color: rgb(255,255,255);*/
-    /*background-color: rgb(0,0,0);*/
-    /*background-color: rgba(0,0,11,0.84);*/
-    /*background-color: rgba(0,1,2,0.84);*/ /* Default*/
-    /*background-color: rgba(0,6,41,0.98); !* Dark Blue *!*/
-    background-color: rgba(0,16,27,0.98); /* Dark Grey Bluish */
+body {
+    background-color: rgb(19,20,24);
+    color: whitesmoke;
+    font-family: 'Exo', sans-serif;
+    width: 60em;
+    margin: auto;
 }
 
-body>.container {
-    width: 960px;
+.wrapper{
+    display: grid;
+    grid-template-columns: min-content 24.5em;
+    /* width: calc(620px + 25em); */
+    /* width: 100%; */
 }
 
-#sim-container {
-    user-select: none;
-    width: 930px;
+.box {
+    border: 1px solid rgb(60, 61, 64);
+    padding: 0.5em;
 }
 
-input[type=number]{
-    width: 60px;
+.controls {
+    font-size: 14px;
 }
 
-#chart {
-    position: relative;
-    bottom: 860px;
-    left: 175px;
-    /*background-color: black;*/
-    background-color: transparent;
+.navbar::after {
+    content: '';
+    display: table;
+    clear: both;
 }
 
-#legend {
-    position: relative;
-    bottom: 1100px;
-    left: 750px;
-    background-color: black;
-    width: 150px;
-    height: 150px;
+#title {
+    float: left;
+    padding-left: 10px;
+    font-size: 28px;
 }
 
-.legendText {
-    fill: darkmagenta;
+nav {
+    float: right;
 }
 
-.graphTitleText {
-    /*color: aqua;*/
-    /*color: deeppink;*/
-    color: chocolate;
-    position: relative;
-    left: 225px;
-    top: 25px;
-
+nav ul {
+    list-style: none;
 }
 
-.animationButton {
-    position: relative;
-    left: 770px;
-    bottom: 65px;
-    z-index: 1;
+nav li {
+    display: inline-block;
+    margin: 10px 20px;
 }
 
-.checkBox {
-    position: relative;
-    bottom: 300px;
-    left: 765px;
+nav a {
+    color: whitesmoke;
+    text-decoration: none;
 }
 
-.checkBoxText {
-    color: chartreuse;
-    background-color: black;
-    position: relative;
-    left: 5px;
-    top: 1px;
+nav a:hover {
+    color: salmon;
 }
 
-.yAxis line {
-    stroke: aqua;
+button {
+    background-color: salmon;
+    color: whitesmoke;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'Exo', sans-serif;
+    font-size: 14px;
+    font-weight: 550;
+    border-radius: 4px;
+    min-width: 150px;
+    transition: all 0.2s ease-in-out;
 }
 
-.yAxis path {
-    stroke: aqua;
-}
-
-.yAxis text {
-    stroke: aqua;
-}
-
-.xAxis line {
-    stroke: aqua;
-}
-
-.xAxis path {
-    stroke: aqua;
-}
-
-.xAxis text {
-    stroke: aqua;
-}
-
-.axisLabelText {
-    fill: chartreuse;
-}
-
-#parameterText {
-    /*color: rgba(195,87,122,0.84);*/
-    color: deeppink;
-    position: relative;
-    left: 40px;
-}
-
-.parameters {
-    position: relative;
-    bottom: 200px;
-    left: 30px;
-
-}
-
-.separationParameter {
-    position: relative;
-    left: 11px;
-}
-
-.expansionParameter {
-    position: relative;
-    left: 20px;
-}
-
-.animationSlider {
-    position: relative;
-    left: 80px;
-    bottom: 1250px;
-    width: 20px;
-    height: 150px;
-    padding: 0;
-}
-
-.animationSlider input {
-    width: 150px;
-    height: 20px;
-    margin: 0;
-    transform-origin: 75px 75px;
-    transform: rotate(-90deg);
-}
-
-#animationSpeedText {
-    background-color: black;
-    color: darkgoldenrod;
-    position: relative;
-    right: 25px;
-}
-
-#animationSpeedTextLineTwo {
-    background-color: black;
-    color: darkgoldenrod;
-    position: relative;
-    right: 14px;
-    bottom: 5px;
-}
-
-.Redshift>canvas {
-    width: 910px;
-    height: 600px;
-    /*height: 212px;*/
+button:hover {
+    box-shadow: 0 5px 15px rgba(250, 128, 114, .4);
 }
