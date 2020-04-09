@@ -41,7 +41,11 @@ export default class MainView extends React.Component {
             // me.virtualGalaxyContainer = me.drawVirtualGalaxy(resources.virtualGalaxy, 200, 50);
             me.rectangle = me.drawRectangle();
             me.description = me.drawLabel('View from Earth', 275, 525);
-            me.line = me.drawLine();
+            me.galaxyText = me.drawLabel('Distant galaxy', 150, 150);
+            me.earthText = me.drawLabel('Earth', 150, 300);
+            me.midLine = me.drawLine(275, 90, 275, 360);
+            me.galaxyLine = me.drawLine(180, 120, 250, 75);
+            me.earthLine = me.drawLine(180, 330, 250, 375);
             // me.start();
         });
     }
@@ -155,11 +159,11 @@ export default class MainView extends React.Component {
         return description;
     }
 
-    drawLine() {
+    drawLine(x1, y1, x2, y2) {
         const line = new PIXI.Graphics();
         line.lineStyle(2, 0xFFFFFF);
-        line.moveTo(275, 90);
-        line.lineTo(275, 360);
+        line.moveTo(x1, y1);
+        line.lineTo(x2, y2);
 
         this.app.stage.addChild(line);
         return line;
@@ -171,6 +175,7 @@ export default class MainView extends React.Component {
     // changed. Since you passed in the settings, it will run every time settings gets changed
     componentDidUpdate() {
         this.updateLine();
+        this.updateText();
     }
 
     updateLine() {
@@ -184,7 +189,14 @@ export default class MainView extends React.Component {
         // }
 
         // This works for anything :)
-        this.line.visible = this.props.settings.showCluster;
+        this.midLine.visible = !this.props.settings.showCluster;
+        this.galaxyLine.visible = !this.props.settings.showCluster;
+        this.earthLine.visible = !this.props.settings.showCluster;
+    }
+
+    updateText() {
+        this.galaxyText.visible = !this.props.settings.showCluster;
+        this.earthText.visible = !this.props.settings.showCluster;
     }
 }
 
