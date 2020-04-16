@@ -30,7 +30,8 @@ export default class MainView extends React.Component {
         this.app.loader
             .add('earth', 'img/blue-circle.png')
             .add('realGalaxy', 'img/yellow-spiral.png')
-            .add('virtualGalaxy', 'img/purple-spiral.png');
+            .add('virtualGalaxy', 'img/purple-spiral.png')
+            .add('cluster', 'img/white-oval.png');
 
         const me = this;
         this.app.loader.load((loader, resources) => {
@@ -46,6 +47,8 @@ export default class MainView extends React.Component {
             me.midLine = me.drawLine(275, 90, 275, 360);
             me.galaxyLine = me.drawLine(180, 120, 250, 75);
             me.earthLine = me.drawLine(180, 330, 250, 375);
+            me.midCluster = me.drawCluster(resources.cluster, 275, 275);
+            me.botCluster = me.drawCluster(resources.cluster, 275, 480);
             // me.start();
         });
     }
@@ -56,14 +59,10 @@ export default class MainView extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
-                <div className="MainViewWrapper">
-                    <div 
-                        className="MainView" 
-                        ref={(thisDiv) => { this.pixiElement = thisDiv; }} 
-                    />
-                </div>
-            </React.Fragment>
+            <div 
+                className="MainView" 
+                ref={(thisDiv) => { this.pixiElement = thisDiv; }} 
+            />
         );
     }
     /*
@@ -169,6 +168,27 @@ export default class MainView extends React.Component {
         return line;
     }
 
+    drawCluster(clusterResource, x, y) {
+        const clusterContainer = new PIXI.Container();
+        clusterContainer.position = new PIXI.Point(x, y);
+        clusterContainer.pivot = new PIXI.Point(x, y);
+
+        let r = Math.PI * 2;  // arbitrary initial value for r
+        for (let i = 0; i < 20; i++) {
+            const cluster = new PIXI.Sprite(clusterResource.texture); 
+            cluster.position = new PIXI.Point(x + r * Math.sin(i), y + r * Math.cos(i));
+            cluster.anchor.set(0.5);
+            cluster.width = 5;
+            cluster.height = 8;
+            cluster.rotation = i;
+            cluster.visible = false;
+            clusterContainer.addChild(cluster);
+            r++;
+        }
+        this.app.stage.addChild(clusterContainer);
+        return clusterContainer;
+    }
+
     // You don't need an animate function. In fact, componentDidUpdate()
     // is much better since it's controlled by React (and probably more efficient)
     // componentDidUpdate() essentially runs every time the parent (in this case, main.jsx) has its state variables
@@ -176,6 +196,7 @@ export default class MainView extends React.Component {
     componentDidUpdate() {
         this.updateLine();
         this.updateText();
+        this.updateCluster();
     }
 
     updateLine() {
@@ -197,6 +218,21 @@ export default class MainView extends React.Component {
     updateText() {
         this.galaxyText.visible = !this.props.settings.showCluster;
         this.earthText.visible = !this.props.settings.showCluster;
+    }
+
+    updateCluster() {
+        for (let i = 0; i < 20; i++) {
+            if (this.props.settings.showCluster && i < this.props.settings.clusterMass) {
+                this.midCluster.children[i].visible = true;
+                this.botCluster.children[i].visible = true;
+            } else {
+                this.midCluster.children[i].visible = false;
+                this.botCluster.children[i].visible = false;
+            }
+        }
+        
+        this.midCluster.y = 275 - 20 * this.props.settings.clusterDistance;
+        this.botCluster.scale = new PIXI.Point(1 / this.props.settings.clusterDistance, 1 / this.props.settings.clusterDistance);
     }
 }
 

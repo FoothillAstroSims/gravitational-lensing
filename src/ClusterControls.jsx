@@ -39,8 +39,8 @@ export default class ClusterControls extends React.Component {
                         <SingleVariableControl
                             name="clusterDistance" 
                             displayName="Cluster distance (parsecs)"
-                            min={0}
-                            max={10}
+                            min={1}
+                            max={5}
                             minLabel="near"
                             maxLabel="far"
                             step={0.01}
