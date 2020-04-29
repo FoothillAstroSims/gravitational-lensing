@@ -7,16 +7,18 @@ export default class GravitationalLensingSimulator extends React.Component {
     constructor(props) {
         super(props);
         this.initialState = {
-            settings: {
+            parameters: {
                 showCluster: false,  // task: make it reset if showCluster is false
-                clusterMass: 5,
-                clusterDistance: 2
+                clusterMass: 1000,
+                clusterDist: 500,
+                sourceDist: 1000,
+                sourceOffset: 15
             }
         };
         this.state = this.initialState;
 
-        this.handleNewSettings = this.handleNewSettings.bind(this);
-        this.reset = this.reset.bind(this)
+        this.handleNewParameters = this.handleNewParameters.bind(this);
+        this.handleReset = this.handleReset.bind(this)
     }
 
     render() {
@@ -24,20 +26,20 @@ export default class GravitationalLensingSimulator extends React.Component {
             <React.Fragment>
                 <div className="box">
                     <NavigationBar
-                    onReset={this.reset}
+                    onReset={this.handleReset.bind(this)}
                     />
                 </div>
                 <div className="wrapper">
                     <div className="box">
                         <MainView 
                             className="MainView"
-                            settings={this.state.settings}
+                            params={this.state.parameters}
                         />
                     </div>
                     <div className="box">
                         <ClusterControls
-                            settings={this.state.settings}
-                            onChange={this.handleNewSettings.bind(this)}
+                            params={this.state.parameters}
+                            onChange={this.handleNewParameters.bind(this)}
                             // onReset={this.reset.bind(this)}
                         />
                     </div>
@@ -46,11 +48,11 @@ export default class GravitationalLensingSimulator extends React.Component {
         );
     }
 
-    handleNewSettings(newSettings) {
-        this.setState({ settings: newSettings });
+    handleNewParameters(newParams) {
+        this.setState({ parameters: newParams });
     }
     
-    reset() {
+    handleReset() {
         this.setState(this.initialState);
     }
     

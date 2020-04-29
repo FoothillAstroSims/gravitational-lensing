@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SingleVariableControl from './SingleVariableControl.jsx';
+import SingleVariableControl from './utils/SingleVariableControl.jsx';
 
 export default class ClusterControls extends React.Component {
     constructor(props) {
@@ -11,44 +11,73 @@ export default class ClusterControls extends React.Component {
     }
 
     render() {
-        let buttonValue = this.props.settings.showCluster ? 'Hide cluster' : 'Show cluster';
+        let buttonValue = this.props.params.showCluster ? 'Hide cluster' : 'Show cluster';
         
         return (
             <React.Fragment>
-                <h2>Cluster Controls</h2>
+                <h2 id="settings">Settings</h2>
                 <button onClick={this.handleButtonClick.bind(this)} >
                     {buttonValue}
                 </button>
                 {
-                    this.props.settings.showCluster && 
+                    this.props.params.showCluster && 
                     <div className="controls">
-                        <br/><br/>
-                        <SingleVariableControl
-                            name="clusterMass"
-                            displayName="Cluster mass (solar units)"
-                            min={0}
-                            max={20}
-                            minLabel="low"
-                            maxLabel="high"
-                            step={1}
-                            decimals={0}
-                            value={this.props.settings.clusterMass}
-                            onChange={this.handleSingleVariableChange}
-                        />
-                        <br/><br/>
-                        <SingleVariableControl
-                            name="clusterDistance" 
-                            displayName="Cluster distance (parsecs)"
-                            min={1}
-                            max={5}
-                            minLabel="near"
-                            maxLabel="far"
-                            step={0.01}
-                            decimals={2}
-                            value={this.props.settings.clusterDistance}
-                            onChange={this.handleSingleVariableChange}
-                        />
-                        <br/><br/>
+                        <br/>
+                        <fieldset>
+                            <br/>
+                            <SingleVariableControl
+                                name="clusterMass"
+                                displayName="Cluster mass (billion solar units)"
+                                min={100}
+                                max={1000}
+                                minLabel="low"
+                                maxLabel="high"
+                                step={10}
+                                decimals={0}
+                                value={this.props.params.clusterMass}
+                                onChange={this.handleSingleVariableChange}
+                            />
+                            <br/><br/>
+                            <SingleVariableControl
+                                name="clusterDist" 
+                                displayName="Cluster distance (million parsecs)"
+                                min={100}
+                                max={990}
+                                minLabel="near"
+                                maxLabel="far"
+                                step={10}
+                                decimals={0}
+                                value={this.props.params.clusterDist}
+                                onChange={this.handleSingleVariableChange}
+                            />
+                            <br/><br/>
+                            <SingleVariableControl
+                                name="sourceDist" 
+                                displayName="Source distance (million parsecs)"
+                                min={110}
+                                max={1000}
+                                minLabel="near"
+                                maxLabel="far"
+                                step={10}
+                                decimals={0}
+                                value={this.props.params.sourceDist}
+                                onChange={this.handleSingleVariableChange}
+                            />
+                            <br/><br/>
+                            <SingleVariableControl
+                                name="sourceOffset" 
+                                displayName="Source offset (hundred parsecs)"
+                                min={0}
+                                max={250}
+                                minLabel="left"
+                                maxLabel="right"
+                                step={0.01}
+                                decimals={2}
+                                value={this.props.params.sourceOffset}
+                                onChange={this.handleSingleVariableChange}
+                            />
+                            <br/><br/>
+                        </fieldset>
                     </div>
                 }
             </React.Fragment>
@@ -57,8 +86,8 @@ export default class ClusterControls extends React.Component {
 
     handleButtonClick() {
         this.props.onChange({
-            ...this.props.settings,
-            showCluster: !this.props.settings.showCluster
+            ...this.props.params,
+            showCluster: !this.props.params.showCluster
         });
     }
 
@@ -70,7 +99,7 @@ export default class ClusterControls extends React.Component {
 
     handleSingleVariableChange(key, value) {
         this.props.onChange({
-            ...this.props.settings,
+            ...this.props.params,
             [key]: value
         });
     }
@@ -79,10 +108,12 @@ export default class ClusterControls extends React.Component {
 
 
 ClusterControls.propTypes = {
-    settings: PropTypes.exact({
+    params: PropTypes.exact({
         showCluster: PropTypes.bool.isRequired,
         clusterMass: PropTypes.number.isRequired,
-        clusterDistance: PropTypes.number.isRequired
+        clusterDist: PropTypes.number.isRequired,
+        sourceDist: PropTypes.number.isRequired,
+        sourceOffset: PropTypes.number.isRequired
     }).isRequired,
     onChange: PropTypes.func.isRequired
 };
