@@ -204,12 +204,12 @@ export default class MainView extends React.Component {
         const pathToLens = new PIXI.Graphics();
         const pathToEarth = new PIXI.Graphics();
 
-        pathToLens.lineStyle(2, 0xFFFFFF);
+        pathToLens.lineStyle(2, 0xa1a0da);
         pathToLens.moveTo(275, 400 - this.props.params.sourceDist / 3);
         pathToLens.lineTo(x, y);
         pathToLens.visible = false;
 
-        pathToEarth.lineStyle(2, 0xFFFFFF);
+        pathToEarth.lineStyle(2, 0xa1a0da);
         pathToEarth.moveTo(x, y);
         pathToEarth.lineTo(275, 400);
         pathToEarth.visible = false;
@@ -305,17 +305,18 @@ export default class MainView extends React.Component {
         let y1 = offset - sourceDist * Math.tan(theta1 - phi);
         let y2 = offset - sourceDist * Math.sin(alpha);
         console.log('original ray offset', y1, y2);
+        
 
         this.leftPath[0].clear;
         this.leftPath[1].clear;
         this.rightPath[0].clear;
         this.rightPath[1].clear;
 
-        this.leftPath[0].lineStyle(2, 0xFFFFFF);
-        this.leftPath[1].lineStyle(2, 0xFFFFFF);
-        this.rightPath[0].lineStyle(2, 0xFFFFFF);
-        this.rightPath[1].lineStyle(2, 0xFFFFFF);
-
+        this.leftPath[0].lineStyle(2, 0xa1a0da);
+        this.leftPath[1].lineStyle(2, 0xa1a0da);
+        this.rightPath[0].lineStyle(2, 0xa1a0da);
+        this.rightPath[1].lineStyle(2, 0xa1a0da);
+        
         this.leftPath[0].moveTo(275, 400 - this.props.params.sourceDist / 3);
         this.leftPath[0].lineTo(275 + r2/100, this.midCluster.y);
         this.leftPath[1].moveTo(275 + r2/100, this.midCluster.y);

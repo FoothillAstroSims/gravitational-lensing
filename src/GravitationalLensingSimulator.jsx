@@ -49,6 +49,10 @@ export default class GravitationalLensingSimulator extends React.Component {
     }
 
     handleNewParameters(newParams) {
+        // distance to source must be greater than/equal to distance to cluster
+        if (newParams.sourceDist < newParams.clusterDist)
+            newParams.sourceDist = newParams.clusterDist;
+
         this.setState({ parameters: newParams });
     }
     
