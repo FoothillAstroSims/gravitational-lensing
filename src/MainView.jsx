@@ -201,23 +201,22 @@ export default class MainView extends React.Component {
     }
 
     drawPath(x, y) {
-        const pathToLens = new PIXI.Graphics();
+        const pathToObject = new PIXI.Graphics();
         const pathToEarth = new PIXI.Graphics();
 
-        pathToLens.lineStyle(2, 0xa1a0da);
-        pathToLens.moveTo(275, 400 - this.props.params.sourceDist / 3);
-        pathToLens.lineTo(x, y);
-        pathToLens.visible = false;
+        pathToObject.lineStyle(2, 0xFFFFFF);
+        pathToObject.moveTo(275, 400 - this.props.params.sourceDist / 3);
+        pathToObject.lineTo(x, y);
+        pathToObject.visible = false;
 
-        pathToEarth.lineStyle(2, 0xa1a0da);
-        pathToEarth.moveTo(x, y);
-        pathToEarth.lineTo(275, 400);
-        pathToEarth.visible = false;
+        pathToObject.lineStyle(2, 0xFFFFFF);
+        pathToObject.moveTo(x, y);
+        pathToObject.lineTo(275, 400);
+        pathToObject.visible = false;
 
-        this.app.stage.addChild(pathToLens);
-        this.app.stage.addChild(pathToEarth);
+        this.app.stage.addChild(pathToObject);
 
-        return [pathToLens, pathToEarth];
+        return pathToObject;
     }
     // You don't need an animate function. In fact, componentDidUpdate()
     // is much better since it's controlled by React (and probably more efficient)
@@ -244,10 +243,10 @@ export default class MainView extends React.Component {
         this.midLine.visible = !this.props.params.showCluster;
         this.galaxyLine.visible = !this.props.params.showCluster;
         this.earthLine.visible = !this.props.params.showCluster;
-        this.leftPath[0].visible = this.props.params.showCluster;
-        this.leftPath[1].visible = this.props.params.showCluster;
-        this.rightPath[0].visible = this.props.params.showCluster;
-        this.rightPath[1].visible = this.props.params.showCluster;
+        this.leftPath.visible = this.props.params.showCluster;
+        this.leftPath.visible = this.props.params.showCluster;
+        this.rightPath.visible = this.props.params.showCluster;
+        this.rightPath.visible = this.props.params.showCluster;
     }
 
     updateText() {
@@ -307,25 +306,25 @@ export default class MainView extends React.Component {
         console.log('original ray offset', y1, y2);
         
 
-        this.leftPath[0].clear;
-        this.leftPath[1].clear;
-        this.rightPath[0].clear;
-        this.rightPath[1].clear;
+        this.leftPath.clear();
+        this.leftPath.clear();
+        this.rightPath.clear();
+        this.rightPath.clear();
 
-        this.leftPath[0].lineStyle(2, 0xa1a0da);
-        this.leftPath[1].lineStyle(2, 0xa1a0da);
-        this.rightPath[0].lineStyle(2, 0xa1a0da);
-        this.rightPath[1].lineStyle(2, 0xa1a0da);
-        
-        this.leftPath[0].moveTo(275, 400 - this.props.params.sourceDist / 3);
-        this.leftPath[0].lineTo(275 + r2/100, this.midCluster.y);
-        this.leftPath[1].moveTo(275 + r2/100, this.midCluster.y);
-        this.leftPath[1].lineTo(275, 400);
+        this.leftPath.lineStyle(2, 0xFFFFFF);
+        this.leftPath.lineStyle(2, 0xFFFFFF);
+        this.rightPath.lineStyle(2, 0xFFFFFF);
+        this.rightPath.lineStyle(2, 0xFFFFFF);
 
-        this.rightPath[0].moveTo(275, 400 - this.props.params.sourceDist / 3);
-        this.rightPath[0].lineTo(275 + r1/100, this.midCluster.y);
-        this.rightPath[1].moveTo(275 + r1/100, this.midCluster.y);
-        this.rightPath[1].lineTo(275, 400);
+        this.leftPath.moveTo(275, 400 - this.props.params.sourceDist / 3);
+        this.leftPath.lineTo(275 + r2/100, this.midCluster.y);
+        this.leftPath.moveTo(275 + r2/100, this.midCluster.y);
+        this.leftPath.lineTo(275, 400);
+
+        this.rightPath.moveTo(275, 400 - this.props.params.sourceDist / 3);
+        this.rightPath.lineTo(275 + r1/100, this.midCluster.y);
+        this.rightPath.moveTo(275 + r1/100, this.midCluster.y);
+        this.rightPath.lineTo(275, 400);
     }
 }
 
