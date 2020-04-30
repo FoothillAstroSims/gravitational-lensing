@@ -28,7 +28,7 @@ export default class ClusterControls extends React.Component {
                             <SingleVariableControl
                                 name="clusterMass"
                                 displayName="Cluster mass (billion solar units)"
-                                min={100}
+                                min={0}
                                 max={1000}
                                 minLabel="low"
                                 maxLabel="high"
@@ -67,7 +67,7 @@ export default class ClusterControls extends React.Component {
                             <SingleVariableControl
                                 name="sourceOffset" 
                                 displayName="Source offset (hundred parsecs)"
-                                min={0}
+                                min={-250}
                                 max={250}
                                 minLabel="left"
                                 maxLabel="right"

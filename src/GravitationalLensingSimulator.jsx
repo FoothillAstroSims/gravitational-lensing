@@ -9,10 +9,10 @@ export default class GravitationalLensingSimulator extends React.Component {
         this.initialState = {
             parameters: {
                 showCluster: false,  // task: make it reset if showCluster is false
-                clusterMass: 1000,
+                clusterMass: 500,
                 clusterDist: 500,
                 sourceDist: 1000,
-                sourceOffset: 15
+                sourceOffset: 0
             }
         };
         this.state = this.initialState;

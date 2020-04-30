@@ -10,7 +10,7 @@ console.log(ARCSEC_PER_RADIAN);
 // source is far to one side of the source
 
 // these will be the sliders in the model 
-let clusterMass = 1 * Math.pow(10, 12);
+let clusterMass = 0;
 let clusterDist = 5 * Math.pow(10, 8);
 let sourceDist = Math.pow(10, 9);
 let offset = 1500;

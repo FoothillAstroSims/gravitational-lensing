@@ -43,22 +43,22 @@ export default class MainView extends React.Component {
         this.app.loader.load((loader, resources) => {
             me.resources = resources;
             me.earth = me.drawEarth(resources.earth);
-            me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 400 - this.props.params.sourceDist / 3);
-            me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
+            me.sourceGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 400 - this.props.params.sourceDist / 3);
+            me.viewGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 50);
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
             // me.virtualGalaxyContainer = me.drawVirtualGalaxy(resources.virtualGalaxy, 200, 50);
             me.rectangle = me.drawRectangle();
             me.description = me.drawLabel('View from Earth', 275, 525);
-            me.galaxyText = me.drawLabel('Distant galaxy', 150, 150);
-            me.earthText = me.drawLabel('Earth', 150, 300);
-            me.midLine = me.drawLine(275, 90, 275, 360);
-            me.galaxyLine = me.drawLine(180, 120, 250, 75);
-            me.earthLine = me.drawLine(180, 330, 250, 375);
+            me.earthText = me.drawLabel('Earth', 165, me.earth.y);
+            me.galaxyText = me.drawLabel('Distant\ngalaxy', me.sourceGalaxy.x + 115, me.sourceGalaxy.y);
+            me.midLine = me.drawLine(me.sourceGalaxy.x, me.sourceGalaxy.y, me.earth.x, me.earth.y, 1);
+            me.earthLine = me.drawLine(200, me.earth.y, 250, me.earth.y, 2);
+            me.galaxyLine = me.drawLine(me.sourceGalaxy.x + 25, me.sourceGalaxy.y, me.sourceGalaxy.x + 75, me.sourceGalaxy.y, 2);
             me.midCluster = me.drawCluster(resources.cluster, 275, 400 - this.props.params.clusterDist / 3);
             me.botCluster = me.drawCluster(resources.cluster, 275, 480);
-            me.leftPath = me.drawPath(200, me.midCluster.y);
-            me.rightPath = me.drawPath(350, me.midCluster.y);
+            me.leftPath = me.drawPath(100, me.midCluster.y);
+            me.rightPath = me.drawPath(450, me.midCluster.y);
 
             // me.start();
         });
@@ -157,7 +157,7 @@ export default class MainView extends React.Component {
     drawLabel(text, x, y) {
         const description = new PIXI.Text(text, {
             fontFamily: 'Exo',
-            fontSize: 18,
+            fontSize: 16,
             fill: 0xFFFFFF
         });
 
@@ -169,9 +169,10 @@ export default class MainView extends React.Component {
         return description;
     }
 
-    drawLine(x1, y1, x2, y2) {
+    drawLine(x1, y1, x2, y2, width) {
         const line = new PIXI.Graphics();
-        line.lineStyle(2, 0xFFFFFF);
+
+        line.lineStyle(width, 0xFFFFFF);
         line.moveTo(x1, y1);
         line.lineTo(x2, y2);
 
@@ -202,14 +203,13 @@ export default class MainView extends React.Component {
 
     drawPath(x, y) {
         const pathToObject = new PIXI.Graphics();
-        const pathToEarth = new PIXI.Graphics();
 
-        pathToObject.lineStyle(2, 0xFFFFFF);
+        pathToObject.lineStyle(2, 0xa1a0da);
         pathToObject.moveTo(275, 400 - this.props.params.sourceDist / 3);
         pathToObject.lineTo(x, y);
         pathToObject.visible = false;
 
-        pathToObject.lineStyle(2, 0xFFFFFF);
+        pathToObject.lineStyle(2, 0xa1a0da);
         pathToObject.moveTo(x, y);
         pathToObject.lineTo(275, 400);
         pathToObject.visible = false;
@@ -218,40 +218,33 @@ export default class MainView extends React.Component {
 
         return pathToObject;
     }
+
     // You don't need an animate function. In fact, componentDidUpdate()
     // is much better since it's controlled by React (and probably more efficient)
     // componentDidUpdate() essentially runs every time the parent (in this case, main.jsx) has its state variables
     // changed. Since you passed in the parameters, it will run every time parameters gets changed
     componentDidUpdate() {
-        this.updateLine();
-        this.updateText();
+        this.updateVisibility();
         this.updateCluster();
+        this.updateSource();
         this.updatePaths();
+        this.updateMidLine();
+        this.updateLabels();
     }
 
-    updateLine() {
-        /**
-         * This is what you had before.
-         */
-        // if (this.props.params.showCluster) {
-        //     this.line.clear();
-        // } else {
-        //     this.drawLine();
-        // }
-
-        // This works for anything :)
-        this.midLine.visible = !this.props.params.showCluster;
-        this.galaxyLine.visible = !this.props.params.showCluster;
+    updateVisibility() {
+        // this.midLine.visible = !this.props.params.showCluster;
         this.earthLine.visible = !this.props.params.showCluster;
-        this.leftPath.visible = this.props.params.showCluster;
-        this.leftPath.visible = this.props.params.showCluster;
-        this.rightPath.visible = this.props.params.showCluster;
-        this.rightPath.visible = this.props.params.showCluster;
-    }
+        this.galaxyLine.visible = !this.props.params.showCluster;
 
-    updateText() {
-        this.galaxyText.visible = !this.props.params.showCluster;
         this.earthText.visible = !this.props.params.showCluster;
+        this.galaxyText.visible = !this.props.params.showCluster;
+
+
+        this.leftPath.visible = this.props.params.showCluster;
+        this.leftPath.visible = this.props.params.showCluster;
+        this.rightPath.visible = this.props.params.showCluster;
+        this.rightPath.visible = this.props.params.showCluster;
     }
 
     updateCluster() {
@@ -307,24 +300,44 @@ export default class MainView extends React.Component {
         
 
         this.leftPath.clear();
-        this.leftPath.clear();
-        this.rightPath.clear();
         this.rightPath.clear();
 
-        this.leftPath.lineStyle(2, 0xFFFFFF);
-        this.leftPath.lineStyle(2, 0xFFFFFF);
-        this.rightPath.lineStyle(2, 0xFFFFFF);
-        this.rightPath.lineStyle(2, 0xFFFFFF);
-
-        this.leftPath.moveTo(275, 400 - this.props.params.sourceDist / 3);
+        this.leftPath.lineStyle(2, 0xa1a0da);
+        this.rightPath.lineStyle(2, 0xa1a0da);
+        
+        this.leftPath.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
         this.leftPath.lineTo(275 + r2/100, this.midCluster.y);
         this.leftPath.moveTo(275 + r2/100, this.midCluster.y);
         this.leftPath.lineTo(275, 400);
 
-        this.rightPath.moveTo(275, 400 - this.props.params.sourceDist / 3);
+        this.rightPath.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
         this.rightPath.lineTo(275 + r1/100, this.midCluster.y);
         this.rightPath.moveTo(275 + r1/100, this.midCluster.y);
         this.rightPath.lineTo(275, 400);
+    }
+
+    updateSource() {
+        this.sourceGalaxy.x = 275 + this.props.params.sourceOffset / 3;
+        this.sourceGalaxy.y = 400 - this.props.params.sourceDist / 3;
+    }
+
+    updateMidLine() {
+        this.midLine.clear(); 
+        this.midLine.lineStyle(1, 0xFFFFFF);
+
+        this.midLine.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
+        this.midLine.lineTo(this.earth.x, this.earth.y);
+    }
+
+    updateLabels() {
+        this.galaxyText.x = this.sourceGalaxy.x + 115;
+        this.galaxyText.y = this.sourceGalaxy.y;
+
+        this.galaxyLine.clear();
+        this.galaxyLine.lineStyle(2, 0xFFFFFF);
+
+        this.galaxyLine.moveTo(this.sourceGalaxy.x + 25, this.sourceGalaxy.y);
+        this.galaxyLine.lineTo(this.sourceGalaxy.x + 75, this.sourceGalaxy.y);
     }
 }
 
