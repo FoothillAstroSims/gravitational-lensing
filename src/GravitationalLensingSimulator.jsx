@@ -68,11 +68,11 @@ export default class GravitationalLensingSimulator extends React.Component {
                             </p>
                             <p>&nbsp;Original ray offset:<br/>
                                 <span class="highlight">
-                                    &nbsp;{this.state.parameters.showOriginalPath ? (Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(2) + " thousand light years (right)") : "N/A"}
+                                    &nbsp;{(this.state.parameters.showOriginalPath && this.state.parameters.showCluster) ? (Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(2) + " thousand light years (right)") : "N/A"}
                                 </span>
                                 <br/>
                                 <span class="highlight">
-                                    &nbsp;{this.state.parameters.showOriginalPath ? (Number.parseFloat(-this.state.parameters.y2 / 1000).toFixed(2) + " thousand light years (left)") : ""}
+                                    &nbsp;{(this.state.parameters.showOriginalPath && this.state.parameters.showCluster) ? (Number.parseFloat(-this.state.parameters.y2 / 1000).toFixed(2) + " thousand light years (left)") : ""}
                                 </span>
                             </p>
                         </div>
