@@ -5,11 +5,86 @@
         <title>
             Gravitational Lensing Simulator
         </title>
+        <!-- CSS for bootstrap modal -->
+        <link rel="stylesheet" 
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+        crossorigin="anonymous" />
+        <!-- CSS file -->
         <link rel="stylesheet" type="text/css" href="./css/main.css" />
     </head>
 
     <body>
+        <!-- main sim window -->
         <div id="sim-root"></div>
+
+        <!-- help modal -->
+        <div aria-hidden="true" aria-labelledby="helpModalLabel" class="modal" id="helpModal" role="dialog" tabindex="-1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="helpModalLabel">
+                            Help
+                        </h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">
+                                ×
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            hello sir
+                            <br><br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- about modal -->
+        <div aria-hidden="true" aria-labelledby="aboutModalLabel" class="modal" id="aboutModal" role="dialog" tabindex="-1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="aboutModalLabel">
+                            About
+                        </h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">
+                                ×
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <strong>This simulator is an HTML5 model of gravitational lensing.</strong>
+                            <br/><br/>
+                            This simulator models the paths followed by two beams of light passing close to a massive object along the way.  
+                            The bottom of the simulation shows where the distant source appears on sky for an observer receiving light that has had its path bent on either side of the interceding lens.  
+                            <br/><br/>
+                            This simulator is part of the Foothill AstroSims project, 
+                            which is aiming to develop new simulations for astronomy education and re-implement, 
+                            in HTML5, Flash-based simulations that are used in Foothill Astronomy courses.  
+                            <br/><br/>
+                            <em>Funding for Foothill AstroSims provided by an Equity & Innovation Grant from Foothill College.</em>
+                            <br/><br/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JS, Popper.js, and jQuery for bootstrap modal -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+        crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+        crossorigin="anonymous"></script>
         <script src="dist/bundle.js"></script>
     </body>
 </html>

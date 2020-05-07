@@ -5,8 +5,9 @@ import { path } from 'd3';
 
 const G = 6.67408 / Math.pow(10, 11);
 const LIGHT_SPEED = 2.99792458 * Math.pow(10, 8);
-const PARSECS = 3.086 * Math.pow(10, 16);
-const ARCSEC_PER_RADIAN = 2.0626494196924 * Math.pow(10, 5);
+const PARSECS_M = 3.086 * Math.pow(10, 16);
+const PARSECS_LY = 3.26156;
+const ARCSEC_PER_RADIAN = 206264.94196924;
 const SUN_MASS = 1.989 * Math.pow(10, 30);
 
 export default class MainView extends React.Component {
@@ -43,11 +44,13 @@ export default class MainView extends React.Component {
         this.app.loader.load((loader, resources) => {
             me.resources = resources;
             me.earth = me.drawEarth(resources.earth);
-            me.sourceGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 400 - this.props.params.sourceDist / 3);
+            me.sourceGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 400 - this.props.params.sourceDist * 30);
             me.viewGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 50);
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
             // me.virtualGalaxyContainer = me.drawVirtualGalaxy(resources.virtualGalaxy, 200, 50);
+            me.leftGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 217.37412417511337, 480);  // from calculations in updatePaths()
+            me.rightGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 332.62587582488663, 480);  // from calculations in updatePaths()
             me.rectangle = me.drawRectangle();
             me.description = me.drawLabel('View from Earth', 275, 525);
             me.earthText = me.drawLabel('Earth', 165, me.earth.y);
@@ -55,11 +58,12 @@ export default class MainView extends React.Component {
             me.midLine = me.drawLine(me.sourceGalaxy.x, me.sourceGalaxy.y, me.earth.x, me.earth.y, 1);
             me.earthLine = me.drawLine(200, me.earth.y, 250, me.earth.y, 2);
             me.galaxyLine = me.drawLine(me.sourceGalaxy.x + 25, me.sourceGalaxy.y, me.sourceGalaxy.x + 75, me.sourceGalaxy.y, 2);
-            me.midCluster = me.drawCluster(resources.cluster, 275, 400 - this.props.params.clusterDist / 3);
+            me.midCluster = me.drawCluster(resources.cluster, 275, 400 - this.props.params.clusterDist * 30);
             me.botCluster = me.drawCluster(resources.cluster, 275, 480);
-            me.leftPath = me.drawPath(100, me.midCluster.y);
-            me.rightPath = me.drawPath(450, me.midCluster.y);
-
+            me.leftPathEarth = me.drawPath(100, me.midCluster.y, 275, 400);
+            me.rightPathEarth = me.drawPath(450, me.midCluster.y, 275, 400);
+            me.leftPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
+            me.rightPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
             // me.start();
         });
     }
@@ -148,7 +152,7 @@ export default class MainView extends React.Component {
         // line width, line color
         rectangle.lineStyle(2, 0xFFFFFF);
         // top left x, top left y, width, height
-        rectangle.drawRect(75, 450, 400, 60); 
+        rectangle.drawRect(0, 450, 550, 60); 
 
         this.app.stage.addChild(rectangle);
         return rectangle;
@@ -185,37 +189,44 @@ export default class MainView extends React.Component {
         clusterContainer.position = new PIXI.Point(x, y);
         clusterContainer.pivot = new PIXI.Point(x, y);
 
-        let r = Math.PI * 2;  // arbitrary initial value for r
+        // [x, y, rotation] (hard coded for randomness)
+        let coordinates = [
+            [x, y, 17], [x - 6, y - 14, 13], [x + 6, y - 12, 3], [x + 9, y + 3, 10],
+            [x - 5, y - 6, 18], [x + 2, y - 6, 4], [x + 3, y + 8, 2], [x - 14, y - 7, 12],
+            [x + 15, y - 4, 8], [x - 15, y + 3, 11], [x - 9, y - 1, 19], [x + 1, y - 13, 6],
+            [x - 5, y + 6, 15], [x + 13, y - 13, 7], [x + 6, y + 14, 5], [x + 15, y + 4, 16],
+            [x - 13, y + 12, 1], [x - 3, y + 13, 20], [x + 8, y - 4, 9], [x + 11, y + 10, 14]
+        ];
+
         for (let i = 0; i < 20; i++) {
-            const cluster = new PIXI.Sprite(clusterResource.texture); 
-            cluster.position = new PIXI.Point(x + r * Math.sin(i), y + r * Math.cos(i));
+            const cluster = new PIXI.Sprite(clusterResource.texture);
             cluster.anchor.set(0.5);
             cluster.width = 5;
             cluster.height = 8;
-            cluster.rotation = i;
             cluster.visible = false;
+            cluster.position = new PIXI.Point(coordinates[i][0], coordinates[i][1]);
+            cluster.rotation = coordinates[i][2];
             clusterContainer.addChild(cluster);
-            r++;
         }
+
         this.app.stage.addChild(clusterContainer);
         return clusterContainer;
     }
 
-    drawPath(x, y) {
+    drawPath(x1, y1, x2, y2) {
         const pathToObject = new PIXI.Graphics();
 
         pathToObject.lineStyle(2, 0xa1a0da);
-        pathToObject.moveTo(275, 400 - this.props.params.sourceDist / 3);
-        pathToObject.lineTo(x, y);
+        pathToObject.moveTo(275, 400 - this.props.params.sourceDist * 30);
+        pathToObject.lineTo(x1, y1);
         pathToObject.visible = false;
 
         pathToObject.lineStyle(2, 0xa1a0da);
-        pathToObject.moveTo(x, y);
-        pathToObject.lineTo(275, 400);
+        pathToObject.moveTo(x1, y1);
+        pathToObject.lineTo(x2, y2);
         pathToObject.visible = false;
 
         this.app.stage.addChild(pathToObject);
-
         return pathToObject;
     }
 
@@ -226,7 +237,7 @@ export default class MainView extends React.Component {
     componentDidUpdate() {
         this.updateVisibility();
         this.updateCluster();
-        this.updateSource();
+        this.updateGalaxies();
         this.updatePaths();
         this.updateMidLine();
         this.updateLabels();
@@ -241,15 +252,20 @@ export default class MainView extends React.Component {
         this.galaxyText.visible = !this.props.params.showCluster;
 
 
-        this.leftPath.visible = this.props.params.showCluster;
-        this.leftPath.visible = this.props.params.showCluster;
-        this.rightPath.visible = this.props.params.showCluster;
-        this.rightPath.visible = this.props.params.showCluster;
+        this.leftPathEarth.visible = this.props.params.showCluster;
+        this.leftPathEarth.visible = this.props.params.showCluster;
+        this.rightPathEarth.visible = this.props.params.showCluster;
+        this.rightPathEarth.visible = this.props.params.showCluster;
+        
+        this.leftPathLight.visible = this.props.params.showCluster;
+        this.leftPathLight.visible = this.props.params.showCluster;
+        this.rightPathLight.visible = this.props.params.showCluster;
+        this.rightPathLight.visible = this.props.params.showCluster;
     }
-
+    
     updateCluster() {
         for (let i = 0; i < 20; i++) {
-            if (this.props.params.showCluster && i < this.props.params.clusterMass / 50) {
+            if (this.props.params.showCluster && i < this.props.params.clusterMass / 5) {
                 this.midCluster.children[i].visible = true;
                 this.botCluster.children[i].visible = true;
             } else {
@@ -258,15 +274,15 @@ export default class MainView extends React.Component {
             }
         }
         
-        this.midCluster.y = 400 - this.props.params.clusterDist / 3;
-        this.botCluster.scale = new PIXI.Point(100 / this.props.params.clusterDist, 100 / this.props.params.clusterDist);
+        this.midCluster.y = 400 - this.props.params.clusterDist * 30;
+        this.botCluster.scale = new PIXI.Point(1 / Math.sqrt(this.props.params.clusterDist), 1 / Math.sqrt(this.props.params.clusterDist));
     }
 
     updatePaths() {
-        const mass = this.props.params.clusterMass * 1000000000;
-        const clusterDist = this.props.params.clusterDist * 1000000;
-        const sourceDist = this.props.params.sourceDist * 1000000;
-        const offset = this.props.params.sourceOffset * 100;
+        const mass = this.props.params.clusterMass * 1000000000000;
+        const clusterDist = this.props.params.clusterDist * 1000000000 / PARSECS_LY;
+        const sourceDist = this.props.params.sourceDist * 1000000000 / PARSECS_LY;
+        const offset = this.props.params.sourceOffset * 1000 / PARSECS_LY;
 
         let beta = Math.atan2(offset, sourceDist) * ARCSEC_PER_RADIAN;
         console.log('source offset angle', beta);
@@ -275,7 +291,7 @@ export default class MainView extends React.Component {
         let angle = beta / ARCSEC_PER_RADIAN;
         let omega = (4 * G * mass * SUN_MASS) / Math.pow(LIGHT_SPEED, 2);
 
-        let rad_term = Math.pow((Math.pow(angle, 2) + 4 * omega * (sourceDist - clusterDist) / (sourceDist * clusterDist * PARSECS)), 0.5);
+        let rad_term = Math.pow((Math.pow(angle, 2) + 4 * omega * (sourceDist - clusterDist) / (sourceDist * clusterDist * PARSECS_M)), 0.5);
         let theta1 = (angle + rad_term) / 2;
         let theta2 = (angle - rad_term) / 2;
         console.log('theta1, theta2, check beta', theta1 * ARCSEC_PER_RADIAN, theta2 * ARCSEC_PER_RADIAN, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
@@ -286,7 +302,7 @@ export default class MainView extends React.Component {
         console.log ('r1, r2', r1, r2);
 
 
-        let phi = omega / (r1 * PARSECS);
+        let phi = omega / (r1 * PARSECS_M);
         console.log('phi (rad, degrees)', phi, phi * 180 / Math.PI);
 
 
@@ -299,34 +315,67 @@ export default class MainView extends React.Component {
         console.log('original ray offset', y1, y2);
         
 
-        this.leftPath.clear();
-        this.rightPath.clear();
+        this.leftPathEarth.clear();
+        this.rightPathEarth.clear();
+        this.leftPathLight.clear();
+        this.rightPathLight.clear();
 
-        this.leftPath.lineStyle(2, 0xa1a0da);
-        this.rightPath.lineStyle(2, 0xa1a0da);
+        this.leftPathEarth.lineStyle(2, 0xa1a0da);
+        this.rightPathEarth.lineStyle(2, 0xa1a0da);
         
-        this.leftPath.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
-        this.leftPath.lineTo(275 + r2/100, this.midCluster.y);
-        this.leftPath.moveTo(275 + r2/100, this.midCluster.y);
-        this.leftPath.lineTo(275, 400);
+        // scaling factor of 0.0003
+        this.leftPathEarth.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
+        this.leftPathEarth.lineTo(275 + r2/3000, this.midCluster.y);
+        this.leftPathEarth.moveTo(275 + r2/3000, this.midCluster.y);
+        this.leftPathEarth.lineTo(275, 400);
 
-        this.rightPath.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
-        this.rightPath.lineTo(275 + r1/100, this.midCluster.y);
-        this.rightPath.moveTo(275 + r1/100, this.midCluster.y);
-        this.rightPath.lineTo(275, 400);
+        this.rightPathEarth.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
+        this.rightPathEarth.lineTo(275 + r1/3000, this.midCluster.y);
+        this.rightPathEarth.moveTo(275 + r1/3000, this.midCluster.y);
+        this.rightPathEarth.lineTo(275, 400);
+
+        if (this.props.params.showOriginalPath) {
+            this.leftPathLight.lineStyle(2, 0xba341e);
+            this.rightPathLight.lineStyle(2, 0xba341e);
+
+            this.leftPathLight.moveTo(275 + r2/3000, this.midCluster.y);
+            this.leftPathLight.lineTo(275 + y2/3000, this.earth.y);
+            
+            this.rightPathLight.moveTo(275 + r1/3000, this.midCluster.y);
+            this.rightPathLight.lineTo(275 + y1/3000, this.earth.y);
+        }
+
+        this.viewGalaxy.x = 275 - beta * 5;
+        this.leftGalaxy.x = 275 - theta1 * ARCSEC_PER_RADIAN * 5;
+        this.rightGalaxy.x = 275 - theta2 * ARCSEC_PER_RADIAN * 5;
+        console.log('left:', this.leftGalaxy.x);
+        console.log('right:', this.rightGalaxy.x);
+        console.log('theta 1:', theta1 * ARCSEC_PER_RADIAN);
+        console.log('theta 2:', theta2 * ARCSEC_PER_RADIAN);
+
+        this.props.params.beta = beta;
+        this.props.params.y1 = y1;
+        this.props.params.y2 = y2;
     }
 
-    updateSource() {
-        this.sourceGalaxy.x = 275 + this.props.params.sourceOffset / 3;
-        this.sourceGalaxy.y = 400 - this.props.params.sourceDist / 3;
+    updateGalaxies() {
+        // scaling factor of 0.03
+        // source
+        this.sourceGalaxy.x = 275 + this.props.params.sourceOffset / 30;
+        this.sourceGalaxy.y = 400 - this.props.params.sourceDist * 30;
+        // earth view
+        this.viewGalaxy.x = 275 + this.props.params.sourceOffset / 30;
+
     }
 
     updateMidLine() {
         this.midLine.clear(); 
-        this.midLine.lineStyle(1, 0xFFFFFF);
 
-        this.midLine.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
-        this.midLine.lineTo(this.earth.x, this.earth.y);
+        if (this.props.params.showDirectPath) {
+            this.midLine.lineStyle(1, 0xFFFFFF);
+            this.midLine.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
+            this.midLine.lineTo(this.earth.x, this.earth.y);
+        }
     }
 
     updateLabels() {
@@ -340,4 +389,3 @@ export default class MainView extends React.Component {
         this.galaxyLine.lineTo(this.sourceGalaxy.x + 75, this.sourceGalaxy.y);
     }
 }
-

@@ -6,89 +6,115 @@ export default class ClusterControls extends React.Component {
     constructor(props) {
         super(props);
         this.handleSingleVariableChange = this.handleSingleVariableChange.bind(this);
-        this.handleButtonClick = this.handleButtonClick.bind(this);
+        this.changeCluster = this.changeCluster.bind(this);
+        this.changeDirectPath = this.changeDirectPath.bind(this);
+        this.changeOriginalPath = this.changeOriginalPath.bind(this);
         // this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
-        let buttonValue = this.props.params.showCluster ? 'Hide cluster' : 'Show cluster';
+        let buttonValue = this.props.params.showCluster ? 'Destroy cluster' : 'Create cluster';
         
         return (
             <React.Fragment>
-                <h2 id="settings">Settings</h2>
-                <button onClick={this.handleButtonClick.bind(this)} >
+                <h4 id="settings"><strong>Settings</strong></h4>
+                <button type="button" id="cluster-control" onClick={this.changeCluster.bind(this)} >
                     {buttonValue}
                 </button>
-                {
-                    this.props.params.showCluster && 
-                    <div className="controls">
+                <div className="controls">
+                    <br/>
+                    <fieldset class="reset-this redo-fieldset">
                         <br/>
-                        <fieldset>
-                            <br/>
-                            <SingleVariableControl
-                                name="clusterMass"
-                                displayName="Cluster mass (billion solar units)"
-                                min={0}
-                                max={1000}
-                                minLabel="low"
-                                maxLabel="high"
-                                step={10}
-                                decimals={0}
-                                value={this.props.params.clusterMass}
-                                onChange={this.handleSingleVariableChange}
+                        <SingleVariableControl
+                            name="sourceDist" 
+                            displayName="Source distance (billion light years)"
+                            min={2}
+                            max={10}
+                            minLabel="near&nbsp;"
+                            maxLabel="&nbsp;far"
+                            step={0.1}
+                            decimals={1}
+                            value={this.props.params.sourceDist}
+                            onChange={this.handleSingleVariableChange}
+                        />
+                        <br/><br/>
+                        <SingleVariableControl
+                            name="sourceOffset" 
+                            displayName="Source offset (thousand light years)"
+                            min={-500}
+                            max={500}
+                            minLabel="left&nbsp;"
+                            maxLabel="&nbsp;right"
+                            step={1}
+                            decimals={1}
+                            value={this.props.params.sourceOffset}
+                            onChange={this.handleSingleVariableChange}
+                        />
+                        <br/><br/>
+                        {
+                            this.props.params.showCluster &&
+                            <React.Fragment>
+                                <SingleVariableControl
+                                    name="clusterDist" 
+                                    displayName="Cluster distance (billion light years)"
+                                    min={1}
+                                    max={9}
+                                    minLabel="near&nbsp;"
+                                    maxLabel="&nbsp;far"
+                                    step={0.1}
+                                    decimals={1}
+                                    value={this.props.params.clusterDist}
+                                    onChange={this.handleSingleVariableChange}
+                                />
+                                <br/><br/>
+                                <SingleVariableControl
+                                    name="clusterMass"
+                                    displayName="Cluster mass (trillion solar masses)"
+                                    min={0}
+                                    max={100}
+                                    minLabel="low&nbsp;"
+                                    maxLabel="&nbsp;high"
+                                    step={5}
+                                    decimals={1}
+                                    value={this.props.params.clusterMass}
+                                    onChange={this.handleSingleVariableChange}
+                                />
+                                <br/><br/>
+                            </React.Fragment>
+                        }
+                    </fieldset>
+                    <form class="directPath">
+                        <div class="custom-control custom-checkbox">
+                            <input 
+                                type="checkbox" 
+                                class="custom-control-input" 
+                                id="directPath"
+                                name="showDirectPath"
+                                onChange={this.changeDirectPath.bind(this)}
+                                checked={this.props.params.showDirectPath} 
                             />
-                            <br/><br/>
-                            <SingleVariableControl
-                                name="clusterDist" 
-                                displayName="Cluster distance (million parsecs)"
-                                min={100}
-                                max={1000}
-                                minLabel="near"
-                                maxLabel="far"
-                                step={10}
-                                decimals={0}
-                                value={this.props.params.clusterDist}
-                                onChange={this.handleSingleVariableChange}
-                            />
-                            <br/><br/>
-                            <SingleVariableControl
-                                name="sourceDist" 
-                                displayName="Source distance (million parsecs)"
-                                min={100}
-                                max={1000}
-                                minLabel="near"
-                                maxLabel="far"
-                                step={10}
-                                decimals={0}
-                                value={this.props.params.sourceDist}
-                                onChange={this.handleSingleVariableChange}
-                            />
-                            <br/><br/>
-                            <SingleVariableControl
-                                name="sourceOffset" 
-                                displayName="Source offset (hundred parsecs)"
-                                min={-250}
-                                max={250}
-                                minLabel="left"
-                                maxLabel="right"
-                                step={0.01}
-                                decimals={2}
-                                value={this.props.params.sourceOffset}
-                                onChange={this.handleSingleVariableChange}
-                            />
-                            <br/><br/>
-                        </fieldset>
-                    </div>
-                }
+                            <label class="custom-control-label" htmlFor="directPath">Show direct path to galaxy</label>
+                        </div>
+                    </form>
+                    {
+                        this.props.params.showCluster &&
+                        <form class="originalPath">
+                            <div class="custom-control custom-checkbox">
+                                <input 
+                                    type="checkbox" 
+                                    class="custom-control-input" 
+                                    id="originalPath" 
+                                    name="showOriginalPath"
+                                    onChange={this.changeOriginalPath.bind(this)}
+                                    checked={this.props.params.showOriginalPath}
+                                />
+                                <label class="custom-control-label" htmlFor="originalPath">Show original paths of light</label>
+                            </div>
+                        </form>
+                    }   
+                </div>
             </React.Fragment>
         );
-    }
-
-    handleButtonClick() {
-        this.props.onChange({
-            ...this.props.params,
-            showCluster: !this.props.params.showCluster
-        });
     }
 
     /*
@@ -104,16 +130,42 @@ export default class ClusterControls extends React.Component {
         });
     }
 
+    changeCluster() {
+        this.props.onChange({
+            ...this.props.params,
+            showCluster: !this.props.params.showCluster
+        });
+    }
+
+    changeDirectPath() {
+        this.props.onChange({
+            ...this.props.params,
+            showDirectPath: !this.props.params.showDirectPath
+        });
+    }
+
+    changeOriginalPath() {
+        this.props.onChange({
+            ...this.props.params,
+            showOriginalPath: !this.props.params.showOriginalPath
+        });
+    }
+
 }
 
 
 ClusterControls.propTypes = {
     params: PropTypes.exact({
-        showCluster: PropTypes.bool.isRequired,
         clusterMass: PropTypes.number.isRequired,
         clusterDist: PropTypes.number.isRequired,
         sourceDist: PropTypes.number.isRequired,
-        sourceOffset: PropTypes.number.isRequired
+        sourceOffset: PropTypes.number.isRequired,
+        showCluster: PropTypes.bool.isRequired,
+        showDirectPath: PropTypes.bool.isRequired,
+        showOriginalPath: PropTypes.bool.isRequired,
+        beta: PropTypes.number.isRequired,
+        y1: PropTypes.number.isRequired,
+        y2: PropTypes.number.isRequired
     }).isRequired,
     onChange: PropTypes.func.isRequired
 };

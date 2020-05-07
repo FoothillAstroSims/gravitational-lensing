@@ -10,13 +10,19 @@ export default class NavigationBar extends React.Component {
         return (
             <React.Fragment>
                 <div className="navbar">
-                    <h1 id="title">Gravitational Lensing by Cluster Simulator</h1>
+                    <h1 id="title"><strong>Gravitational Lensing by Cluster Simulator</strong></h1>
                     <nav>
                         <ul>
                             {/* needs work */}
-                            <li><a href="#" onClick={this.props.onReset}>Reset</a></li>
-                            <li><a href="#">Help</a></li>
-                            <li><a href="#">About</a></li>
+                            <li>
+                                <a href="#" onClick={this.props.onReset}>Reset</a>
+                            </li>
+                            <li>
+                                <a href="#" data-toggle="modal" data-target="#helpModal">Help</a>
+                            </li>
+                            <li>
+                                <a href="#" data-toggle="modal" data-target="#aboutModal">About</a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
