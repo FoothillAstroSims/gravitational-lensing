@@ -83,8 +83,8 @@ export default class GravitationalLensingSimulator extends React.Component {
                             onChange={this.handleNewParameters.bind(this)}
                         />
                         <div id="survey">
-                            <a href="#" target="_blank" rel="noopener noreferrer">
-                                <button type="button" className="btn btn=warning" id="feedback"><strong>Give us feedback!</strong></button>
+                            <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=n7L3RQCxQUyAT7NBighZStjAWTIFlutChq8ZZEGLLMdUNTJKNlVITzlCNTAyNDJFQkwwTlFFNE80Vi4u" target="_blank" rel="noopener noreferrer">
+                                <button type="button" className="btn btn=warning" id="feedback">Give us feedback!</button>
                             </a>
                         </div>
                     </div>

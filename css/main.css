@@ -115,21 +115,25 @@ p {
 .directPath {
     font-size: 14px;
     position: absolute;
-    top: 500px;
+    top: 535px;
 }
 
 .originalPath {
     font-size: 14px; 
     position: absolute;
-    top: 525px;
+    top: 560px;
 }
 
 #feedback {
     position: absolute;
     top: 610px;
     background-color: rgb(255, 193, 8);
+    text-align: center;
+    text-decoration: none;
     font-family: 'Exo', sans-serif;
     font-size: 14px;
+    font-weight: 550;
+    transition: all 0.2s ease-in-out;
 }
 
 #feedback:hover {

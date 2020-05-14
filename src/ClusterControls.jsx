@@ -27,7 +27,7 @@ export default class ClusterControls extends React.Component {
                         <br/>
                         <SingleVariableControl
                             name="sourceDist" 
-                            displayName="Source distance (billion light years)"
+                            displayName="Source distance (billion light yrs)"
                             min={2}
                             max={10}
                             minLabel="near&nbsp;"
@@ -40,7 +40,7 @@ export default class ClusterControls extends React.Component {
                         <br/><br/>
                         <SingleVariableControl
                             name="sourceOffset" 
-                            displayName="Source offset (thousand light years)"
+                            displayName="Source offset (thousand light yrs)"
                             min={-500}
                             max={500}
                             minLabel="left&nbsp;"
@@ -56,7 +56,7 @@ export default class ClusterControls extends React.Component {
                             <React.Fragment>
                                 <SingleVariableControl
                                     name="clusterDist" 
-                                    displayName="Cluster distance (billion light years)"
+                                    displayName="Cluster distance (billion light yrs)"
                                     min={1}
                                     max={9}
                                     minLabel="near&nbsp;"
