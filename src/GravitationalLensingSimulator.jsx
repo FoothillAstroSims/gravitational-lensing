@@ -68,11 +68,11 @@ export default class GravitationalLensingSimulator extends React.Component {
                             </p>
                             <p>&nbsp;Original ray offset:<br/>
                                 <span class="highlight">
-                                    &nbsp;{(this.state.parameters.showOriginalPath && this.state.parameters.showCluster) ? (Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(2) + " thousand light years (right)") : "N/A"}
+                                    &nbsp;{(this.state.parameters.showOriginalPath && this.state.parameters.showCluster) ? (Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(2) + " thousand light years (left)") : "N/A"}
                                 </span>
                                 <br/>
                                 <span class="highlight">
-                                    &nbsp;{(this.state.parameters.showOriginalPath && this.state.parameters.showCluster) ? (Number.parseFloat(-this.state.parameters.y2 / 1000).toFixed(2) + " thousand light years (left)") : ""}
+                                    &nbsp;{(this.state.parameters.showOriginalPath && this.state.parameters.showCluster) ? (Number.parseFloat(-this.state.parameters.y2 / 1000).toFixed(2) + " thousand light years (right)") : ""}
                                 </span>
                             </p>
                         </div>
@@ -82,6 +82,11 @@ export default class GravitationalLensingSimulator extends React.Component {
                             params={this.state.parameters}
                             onChange={this.handleNewParameters.bind(this)}
                         />
+                        <div id="survey">
+                            <a href="#" target="_blank" rel="noopener noreferrer">
+                                <button type="button" className="btn btn=warning" id="feedback"><strong>Give us feedback!</strong></button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </React.Fragment>
