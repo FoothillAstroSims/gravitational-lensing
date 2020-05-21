@@ -53,6 +53,8 @@ export default class MainView extends React.Component {
             me.rightGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 332.62587582488663, 480);  // from calculations in updatePaths()
             me.rectangle = me.drawRectangle();
             me.description = me.drawLabel('View from Earth', 275, 525);
+            me.eastText = me.drawLabel('E', 20, 525);
+            me.westText = me.drawLabel('W', 530, 525);
             me.earthText = me.drawLabel('Earth', 165, me.earth.y);
             me.galaxyText = me.drawLabel('Distant\ngalaxy', me.sourceGalaxy.x + 115, me.sourceGalaxy.y);
             me.midLine = me.drawLine(me.sourceGalaxy.x, me.sourceGalaxy.y, me.earth.x, me.earth.y, 1);
@@ -370,6 +372,11 @@ export default class MainView extends React.Component {
         this.props.params.beta = beta;
         this.props.params.y1 = y1;
         this.props.params.y2 = y2;
+        this.props.params.theta1 = theta1 * ARCSEC_PER_RADIAN;
+        this.props.params.theta2 = theta2 * ARCSEC_PER_RADIAN;
+        this.props.params.r1 = r1;
+        this.props.params.r2 = r2;
+        this.props.params.phi = phi;
     }
 
     updateGalaxies() {

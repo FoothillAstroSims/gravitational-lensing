@@ -87,6 +87,13 @@ nav a:hover {
     font-size: 12px;
 }
 
+#debug {
+    position: absolute;
+    top: 90px;
+    left: 40%;
+    font-size: 12px;
+}
+
 p {
     margin: 5px 0px 0px;
 }

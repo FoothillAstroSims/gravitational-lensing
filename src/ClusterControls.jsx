@@ -97,7 +97,7 @@ export default class ClusterControls extends React.Component {
                         </div>
                     </form>
                     {
-                        this.props.params.showCluster &&
+                        (this.props.params.showCluster) &&
                         <form class="originalPath">
                             <div class="custom-control custom-checkbox">
                                 <input 
@@ -165,7 +165,12 @@ ClusterControls.propTypes = {
         showOriginalPath: PropTypes.bool.isRequired,
         beta: PropTypes.number.isRequired,
         y1: PropTypes.number.isRequired,
-        y2: PropTypes.number.isRequired
+        y2: PropTypes.number.isRequired,
+        theta1: PropTypes.number.isRequired,
+        theta2: PropTypes.number.isRequired,
+        r1: PropTypes.number.isRequired,
+        r2: PropTypes.number.isRequired,
+        phi: PropTypes.number.isRequired
     }).isRequired,
     onChange: PropTypes.func.isRequired
 };
