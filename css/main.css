@@ -16,6 +16,7 @@ body {
 .box {
     border: 1px solid rgb(60, 61, 64);
     padding: 0.5em;
+    /* margin-bottom: -1px; */
 }
 
 .navbar::after {
@@ -88,10 +89,29 @@ nav a:hover {
 }
 
 #debug {
-    position: absolute;
-    top: 90px;
-    left: 40%;
+    position: relative;
+    overflow: hidden;
+    left: 60%;
+    top: -560px;
+    margin-bottom: -69px;
     font-size: 12px;
+    max-width: 250px;
+}
+
+#angle {
+    position: relative;
+    overflow: hidden;
+    left: 20%;
+    top: -140px;
+    margin-bottom: -24px;
+    font-size: 13px;
+    color: rgb(232, 195, 195);
+}
+
+#angle-text {
+    display: inline-block;
+    /* padding-right: 75px; */
+    min-width: 205px;
 }
 
 p {
@@ -122,13 +142,19 @@ p {
 .directPath {
     font-size: 14px;
     position: absolute;
-    top: 535px;
+    top: 515px;
 }
 
 .originalPath {
     font-size: 14px; 
     position: absolute;
-    top: 560px;
+    top: 540px;
+}
+
+.lightAngle {
+    font-size: 14px;
+    position: absolute;
+    top: 565px;
 }
 
 #feedback {

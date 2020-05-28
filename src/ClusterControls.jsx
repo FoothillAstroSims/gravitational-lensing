@@ -9,6 +9,7 @@ export default class ClusterControls extends React.Component {
         this.changeCluster = this.changeCluster.bind(this);
         this.changeDirectPath = this.changeDirectPath.bind(this);
         this.changeOriginalPath = this.changeOriginalPath.bind(this);
+        this.changeLightAngle = this.changeLightAngle.bind(this);
         // this.handleChange = this.handleChange.bind(this);
     }
 
@@ -98,19 +99,34 @@ export default class ClusterControls extends React.Component {
                     </form>
                     {
                         (this.props.params.showCluster) &&
-                        <form class="originalPath">
-                            <div class="custom-control custom-checkbox">
-                                <input 
-                                    type="checkbox" 
-                                    class="custom-control-input" 
-                                    id="originalPath" 
-                                    name="showOriginalPath"
-                                    onChange={this.changeOriginalPath.bind(this)}
-                                    checked={this.props.params.showOriginalPath}
-                                />
-                                <label class="custom-control-label" htmlFor="originalPath">Show original paths of light</label>
-                            </div>
-                        </form>
+                        <React.Fragment>
+                            <form class="originalPath">
+                                <div class="custom-control custom-checkbox">
+                                    <input 
+                                        type="checkbox" 
+                                        class="custom-control-input" 
+                                        id="originalPath" 
+                                        name="showOriginalPath"
+                                        onChange={this.changeOriginalPath.bind(this)}
+                                        checked={this.props.params.showOriginalPath}
+                                    />
+                                    <label class="custom-control-label" htmlFor="originalPath">Show original paths of light</label>
+                                </div>
+                            </form>
+                            <form class="lightAngle">
+                                <div class="custom-control custom-checkbox">
+                                    <input 
+                                        type="checkbox" 
+                                        class="custom-control-input" 
+                                        id="lightAngle" 
+                                        name="showLightAngle"
+                                        onChange={this.changeLightAngle.bind(this)}
+                                        checked={this.props.params.showLightAngle}
+                                    />
+                                    <label class="custom-control-label" htmlFor="lightAngle">Show angles to observed light</label>
+                                </div>
+                            </form>
+                        </React.Fragment>
                     }   
                 </div>
             </React.Fragment>
@@ -151,6 +167,13 @@ export default class ClusterControls extends React.Component {
         });
     }
 
+    changeLightAngle() {
+        this.props.onChange({
+            ...this.props.params,
+            showLightAngle: !this.props.params.showLightAngle
+        })
+    }
+
 }
 
 
@@ -163,6 +186,7 @@ ClusterControls.propTypes = {
         showCluster: PropTypes.bool.isRequired,
         showDirectPath: PropTypes.bool.isRequired,
         showOriginalPath: PropTypes.bool.isRequired,
+        showLightAngle: PropTypes.bool.isRequired,
         beta: PropTypes.number.isRequired,
         y1: PropTypes.number.isRequired,
         y2: PropTypes.number.isRequired,

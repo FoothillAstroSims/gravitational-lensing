@@ -15,6 +15,7 @@ export default class GravitationalLensingSimulator extends React.Component {
                 showCluster: false, 
                 showDirectPath: true,
                 showOriginalPath: false,
+                showLightAngle: false,
                 beta: 0.00,
                 y1: 0.00,
                 y2: 0.00,
@@ -85,38 +86,47 @@ export default class GravitationalLensingSimulator extends React.Component {
                                 </p>
                             }
                         </div>
-                        <div id="debug">
-                            {
-                                (this.state.parameters.showCluster) &&
-                                <React.Fragment>
-                                    <p>&nbsp;theta 1:&nbsp;
-                                        <span class="highlight">
-                                            {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
-                                        </span>
-                                    </p>
-                                    <p>&nbsp;theta 2:&nbsp;
-                                        <span class="highlight">
-                                            {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
-                                        </span>
-                                    </p>
-                                    <p>&nbsp;r1:&nbsp;
-                                        <span class="highlight">
-                                            {Number.parseFloat(this.state.parameters.r1 / 1000).toFixed(3)} thousand light years
-                                        </span>
-                                    </p>
-                                    <p>&nbsp;r2:&nbsp;
-                                        <span class="highlight">
-                                            {Number.parseFloat(this.state.parameters.r2 / 1000).toFixed(3)} thousand light years
-                                        </span>
-                                    </p>
-                                    <p>&nbsp;phi:&nbsp;
-                                        <span class="highlight">
-                                            {Number.parseFloat(this.state.parameters.phi).toFixed(8)} radians
-                                        </span>
-                                    </p>
-                                </React.Fragment>
-                            }
-                        </div>
+                        {
+                            (this.state.parameters.showCluster) &&
+                            <div id="debug">
+                                {/* <p>&nbsp;theta 1:&nbsp;
+                                    <span class="highlight">
+                                        {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
+                                    </span>
+                                </p>
+                                <p>&nbsp;theta 2:&nbsp;
+                                    <span class="highlight">
+                                        {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
+                                    </span>
+                                </p> */}
+                                <p>&nbsp;r1:&nbsp;
+                                    <span class="highlight">
+                                        {Number.parseFloat(this.state.parameters.r1 / 1000).toFixed(3)} thousand light years
+                                    </span>
+                                </p>
+                                <p>&nbsp;r2:&nbsp;
+                                    <span class="highlight">
+                                        {Number.parseFloat(this.state.parameters.r2 / 1000).toFixed(3)} thousand light years
+                                    </span>
+                                </p>
+                                <p>&nbsp;phi:&nbsp;
+                                    <span class="highlight">
+                                        {Number.parseFloat(this.state.parameters.phi).toFixed(8)} radians
+                                    </span>
+                                </p>
+                            </div>
+                        }
+                        {
+                            (this.state.parameters.showLightAngle && this.state.parameters.showCluster) &&
+                            <div id="angle">
+                                <p id="angle-text">&#8592;&nbsp;&nbsp;
+                                    {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
+                                </p>
+                                <p id="angle-text">
+                                    {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
+                                &nbsp;&nbsp;&#8594;</p>
+                            </div>
+                        }
                     </div>
                     <div className="box">
                         <ClusterControls

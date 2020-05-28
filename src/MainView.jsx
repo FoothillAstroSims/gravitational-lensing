@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as PIXI from 'pixi.js';
-import { path } from 'd3';
+import { path, thresholdFreedmanDiaconis } from 'd3';
 
 const G = 6.67408 / Math.pow(10, 11);
 const LIGHT_SPEED = 2.99792458 * Math.pow(10, 8);
@@ -9,6 +9,13 @@ const LIGHT_SPEED = 2.99792458 * Math.pow(10, 8);
 const LIGHT_YRS = 9.461 * Math.pow(10, 15);
 const ARCSEC_PER_RADIAN = 206264.94196924;
 const SUN_MASS = 1.989 * Math.pow(10, 30);
+
+const convertPolarToRect = function(radius, angle, center) {
+    return new PIXI.Point(
+        radius * Math.cos(angle) + center.x,
+        radius * Math.sin(angle) + center.y
+    );
+}
 
 export default class MainView extends React.Component {
     constructor(props) {
@@ -66,7 +73,18 @@ export default class MainView extends React.Component {
             me.rightPathEarth = me.drawPath(450, me.midCluster.y, 275, 400);
             me.leftPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
             me.rightPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
-            // me.start();
+            me.rightArc = me.drawArc(
+                Math.atan2(me.midCluster.y - me.earth.y, (275 + me.props.params.r1 / 3000) - me.earth.x), 
+                Math.atan2(me.sourceGalaxy.y - me.earth.y, me.sourceGalaxy.x - me.earth.x), 
+                true
+            );
+            me.leftArc = me.drawArc(
+                Math.atan2(me.midCluster.y - me.earth.y, (275 + me.props.params.r2 / 3000) - me.earth.x), 
+                Math.atan2(me.sourceGalaxy.y - me.earth.y, me.sourceGalaxy.x - me.earth.x), 
+                false
+            );
+            me.rightArcArrow = me.drawArrow(me.earth, true);  // temp location
+            me.leftArcArrow = me.drawArrow(me.earth, false);  // temp location
         });
     }
 
@@ -162,18 +180,18 @@ export default class MainView extends React.Component {
     }
 
     drawLabel(text, x, y) {
-        const description = new PIXI.Text(text, {
+        const label = new PIXI.Text(text, {
             fontFamily: 'Exo',
             fontSize: 16,
             fill: 0xFFFFFF
         });
 
-        description.resolution = 2;
-        description.anchor.set(0.5);
-        description.position = new PIXI.Point(x, y);
+        label.resolution = 2;
+        label.anchor.set(0.5);
+        label.position = new PIXI.Point(x, y);
 
-        this.app.stage.addChild(description);
-        return description;
+        this.app.stage.addChild(label);
+        return label;
     }
 
     drawLine(x1, y1, x2, y2, width) {
@@ -185,6 +203,27 @@ export default class MainView extends React.Component {
 
         this.app.stage.addChild(line);
         return line;
+    }
+
+    drawArrow(tip, east) {
+        const arrow = new PIXI.Graphics();
+        arrow.lineStyle(2, 0xe8c3c3);
+        arrow.visible = false;
+
+        if (east) {
+            arrow.moveTo(tip.x, tip.y);
+            arrow.lineTo(tip.x - 5, tip.y - 5);
+            arrow.moveTo(tip.x, tip.y);
+            arrow.lineTo(tip.x - 5, tip.y + 5);
+        } else {
+            arrow.moveTo(tip.x, tip.y);
+            arrow.lineTo(tip.x + 5, tip.y - 5);
+            arrow.moveTo(tip.x, tip.y);
+            arrow.lineTo(tip.x + 5, tip.y + 5);
+        }
+
+        this.app.stage.addChild(arrow);
+        return arrow;
     }
 
     drawCluster(clusterResource, x, y) {
@@ -233,6 +272,24 @@ export default class MainView extends React.Component {
         return pathToObject;
     }
 
+    drawArc(startAngle, endAngle, anticlockwise) {
+        const arc = new PIXI.Graphics();
+        arc.visible = false;
+
+        arc.lineStyle(2, 0xe8c3c3);
+        arc.arc(
+            this.earth.x,
+            this.earth.y,
+            45,
+            startAngle,
+            endAngle,
+            anticlockwise
+        );
+
+        this.app.stage.addChild(arc);
+        return arc;
+    }
+
     // You don't need an animate function. In fact, componentDidUpdate()
     // is much better since it's controlled by React (and probably more efficient)
     // componentDidUpdate() essentially runs every time the parent (in this case, main.jsx) has its state variables
@@ -244,6 +301,7 @@ export default class MainView extends React.Component {
         this.updatePaths();
         this.updateMidLine();
         this.updateLabels();
+        this.updateArcs();
     }
 
     updateVisibility() {
@@ -266,6 +324,11 @@ export default class MainView extends React.Component {
         this.leftPathLight.visible = this.props.params.showCluster;
         this.rightPathLight.visible = this.props.params.showCluster;
         this.rightPathLight.visible = this.props.params.showCluster;
+
+        this.leftArc.visible = this.props.params.showCluster;
+        this.rightArc.visible = this.props.params.showCluster;
+        this.leftArcArrow.visible = this.props.params.showCluster;
+        this.rightArcArrow.visible = this.props.params.showCluster;
     }
     
     updateCluster() {
@@ -290,7 +353,7 @@ export default class MainView extends React.Component {
         const offset = this.props.params.sourceOffset * 1000;
 
         let beta = Math.atan2(offset, sourceDist) * ARCSEC_PER_RADIAN;
-        console.log('source offset angle', beta);
+        // console.log('source offset angle', beta);
 
         // calculations 
         let angle = beta / ARCSEC_PER_RADIAN;
@@ -299,25 +362,26 @@ export default class MainView extends React.Component {
         let rad_term = Math.pow((Math.pow(angle, 2) + 4 * omega * (sourceDist - clusterDist) / (sourceDist * clusterDist * LIGHT_YRS)), 0.5);
         let theta1 = (angle + rad_term) / 2;
         let theta2 = (angle - rad_term) / 2;
-        console.log('theta1, theta2, check beta', theta1 * ARCSEC_PER_RADIAN, theta2 * ARCSEC_PER_RADIAN, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
+        console.log('theta1, theta2, check beta', theta1 * 30000, theta2 * 30000, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
 
 
         let r1 = clusterDist * Math.tan(theta1);
         let r2 = clusterDist * Math.tan(theta2);
-        console.log ('r1, r2', r1, r2);
+        // console.log ('r1, r2', r1, r2);
 
 
         let phi = omega / (r1 * LIGHT_YRS);
-        console.log('phi (rad, degrees)', phi, phi * 180 / Math.PI);
+        // console.log('phi (rad, degrees)', phi, phi * 180 / Math.PI);
 
 
         // calculate how far off to the side the observed light would have landed
         let alpha = Math.atan2(offset - r2, sourceDist - clusterDist);
-        console.log(alpha, alpha * 180 / Math.PI);
+        // console.log(alpha, alpha * 180 / Math.PI);
 
         let y1 = offset - sourceDist * Math.tan(theta1 - phi);
         let y2 = offset - sourceDist * Math.sin(alpha);
-        console.log('original ray offset', y1, y2);
+        // console.log('original ray offset', y1, y2);
+        console.log("ANGLE", Math.atan2())
         
 
         this.leftPathEarth.clear();
@@ -408,6 +472,64 @@ export default class MainView extends React.Component {
 
         this.galaxyLine.moveTo(this.sourceGalaxy.x + 25, this.sourceGalaxy.y);
         this.galaxyLine.lineTo(this.sourceGalaxy.x + 75, this.sourceGalaxy.y);
+    }
+
+    updateArcs() {
+        this.rightArc.clear();
+        this.leftArc.clear();
+        this.rightArcArrow.clear();
+        this.leftArcArrow.clear();
+        
+        if (this.props.params.showLightAngle) {
+            this.rightArc.lineStyle(2, 0xe8c3c3);
+            this.leftArc.lineStyle(2, 0xe8c3c3);
+            this.rightArcArrow.lineStyle(2, 0xe8c3c3);
+            this.leftArcArrow.lineStyle(2, 0xe8c3c3);
+
+            let rightArcAngleStart = Math.atan2(this.midCluster.y - this.earth.y, (275 + this.props.params.r1 / 3000) - this.earth.x);
+            let rightArcAngleEnd = Math.atan2(this.sourceGalaxy.y - this.earth.y, this.sourceGalaxy.x - this.earth.x);
+            let leftArcAngleStart = Math.atan2(this.midCluster.y - this.earth.y, (275 + this.props.params.r2 / 3000) - this.earth.x);
+            let leftArcAngleEnd = Math.atan2(this.sourceGalaxy.y - this.earth.y, this.sourceGalaxy.x - this.earth.x);
+
+            this.rightArc.arc(
+                this.earth.x,
+                this.earth.y,
+                30,
+                rightArcAngleStart, 
+                rightArcAngleEnd, 
+                true
+            );
+            this.leftArc.arc(
+                this.earth.x,
+                this.earth.y,
+                20,
+                leftArcAngleStart, 
+                leftArcAngleEnd, 
+                false
+            );
+
+            // finished drawing actual arc, move onto arrowheads
+            let rightArcArrowTip = convertPolarToRect(30, rightArcAngleStart, this.earth);
+            let leftArcArrowTip = convertPolarToRect(20, leftArcAngleStart, this.earth);
+
+            // for arrow tips
+            let rightTip = Math.atan2((this.midCluster.y - 10 * this.props.params.clusterDist) - this.earth.y, (275 + this.props.params.r1 / 3000 - 10 * this.props.params.clusterDist) - this.earth.x);
+            let leftTip = Math.atan2((this.midCluster.y - 10 * this.props.params.clusterDist) - this.earth.y, (275 + this.props.params.r2 / 3000 + 10 * this.props.params.clusterDist) - this.earth.x);
+            let a = convertPolarToRect(36, rightTip, this.earth);  // r + 6
+            let b = convertPolarToRect(24, rightTip, this.earth);  // r - 6
+            let c = convertPolarToRect(26, leftTip, this.earth);   // r + 6
+            let d = convertPolarToRect(14, leftTip, this.earth);   // r - 6
+
+            this.rightArcArrow.moveTo(rightArcArrowTip.x, rightArcArrowTip.y);
+            this.rightArcArrow.lineTo(a.x, a.y);
+            this.rightArcArrow.moveTo(rightArcArrowTip.x, rightArcArrowTip.y);
+            this.rightArcArrow.lineTo(b.x, b.y);
+
+            this.leftArcArrow.moveTo(leftArcArrowTip.x, leftArcArrowTip.y);
+            this.leftArcArrow.lineTo(c.x, c.y);
+            this.leftArcArrow.moveTo(leftArcArrowTip.x, leftArcArrowTip.y);
+            this.leftArcArrow.lineTo(d.x, d.y);
+        }
     }
 
     calculateLightPaths(r) {
