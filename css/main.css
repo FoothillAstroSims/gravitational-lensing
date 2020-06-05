@@ -139,20 +139,22 @@ p {
     padding: 0px 75px 0px 10px;
 }
 
-.directPath {
+.toggle {
     font-size: 14px;
+    min-width: 250px;
+}
+
+.directPath {
     position: absolute;
     top: 515px;
 }
 
 .originalPath {
-    font-size: 14px; 
     position: absolute;
     top: 540px;
 }
 
 .lightAngle {
-    font-size: 14px;
     position: absolute;
     top: 565px;
 }
@@ -167,8 +169,13 @@ p {
     font-size: 14px;
     font-weight: 550;
     transition: all 0.2s ease-in-out;
+    min-width: 150px;
 }
 
 #feedback:hover {
     box-shadow: 0 5px 15px rgba(255, 193, 8, .4);
+}
+
+#reverse {
+    transform: rotateY(180deg);
 }

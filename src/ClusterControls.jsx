@@ -71,7 +71,7 @@ export default class ClusterControls extends React.Component {
                                 <SingleVariableControl
                                     name="clusterMass"
                                     displayName="Cluster mass (trillion solar masses)"
-                                    min={0}
+                                    min={5}
                                     max={100}
                                     minLabel="low&nbsp;"
                                     maxLabel="&nbsp;high"
@@ -84,50 +84,52 @@ export default class ClusterControls extends React.Component {
                             </React.Fragment>
                         }
                     </fieldset>
-                    <form class="directPath">
-                        <div class="custom-control custom-checkbox">
-                            <input 
-                                type="checkbox" 
-                                class="custom-control-input" 
-                                id="directPath"
-                                name="showDirectPath"
-                                onChange={this.changeDirectPath.bind(this)}
-                                checked={this.props.params.showDirectPath} 
-                            />
-                            <label class="custom-control-label" htmlFor="directPath">Show direct path to galaxy</label>
-                        </div>
-                    </form>
-                    {
-                        (this.props.params.showCluster) &&
-                        <React.Fragment>
-                            <form class="originalPath">
-                                <div class="custom-control custom-checkbox">
-                                    <input 
-                                        type="checkbox" 
-                                        class="custom-control-input" 
-                                        id="originalPath" 
-                                        name="showOriginalPath"
-                                        onChange={this.changeOriginalPath.bind(this)}
-                                        checked={this.props.params.showOriginalPath}
-                                    />
-                                    <label class="custom-control-label" htmlFor="originalPath">Show original paths of light</label>
-                                </div>
-                            </form>
-                            <form class="lightAngle">
-                                <div class="custom-control custom-checkbox">
-                                    <input 
-                                        type="checkbox" 
-                                        class="custom-control-input" 
-                                        id="lightAngle" 
-                                        name="showLightAngle"
-                                        onChange={this.changeLightAngle.bind(this)}
-                                        checked={this.props.params.showLightAngle}
-                                    />
-                                    <label class="custom-control-label" htmlFor="lightAngle">Show angles to observed light</label>
-                                </div>
-                            </form>
-                        </React.Fragment>
-                    }   
+                    <div class="toggle">
+                        <form class="directPath">
+                            <div class="custom-control custom-checkbox">
+                                <input 
+                                    type="checkbox" 
+                                    class="custom-control-input" 
+                                    id="directPath"
+                                    name="showDirectPath"
+                                    onChange={this.changeDirectPath.bind(this)}
+                                    checked={this.props.params.showDirectPath} 
+                                />
+                                <label class="custom-control-label" htmlFor="directPath">Display direct path to galaxy</label>
+                            </div>
+                        </form>
+                        {
+                            (this.props.params.showCluster) &&
+                            <div>
+                                <form class="originalPath">
+                                    <div class="custom-control custom-checkbox">
+                                        <input 
+                                            type="checkbox" 
+                                            class="custom-control-input" 
+                                            id="originalPath" 
+                                            name="showOriginalPath"
+                                            onChange={this.changeOriginalPath.bind(this)}
+                                            checked={this.props.params.showOriginalPath}
+                                        />
+                                        <label class="custom-control-label" htmlFor="originalPath">Display original paths of light</label>
+                                    </div>
+                                </form>
+                                <form class="lightAngle">
+                                    <div class="custom-control custom-checkbox">
+                                        <input 
+                                            type="checkbox" 
+                                            class="custom-control-input" 
+                                            id="lightAngle" 
+                                            name="showLightAngle"
+                                            onChange={this.changeLightAngle.bind(this)}
+                                            checked={this.props.params.showLightAngle}
+                                        />
+                                        <label class="custom-control-label" htmlFor="lightAngle">Display angles to observed light</label>
+                                    </div>
+                                </form>
+                            </div>
+                        }   
+                    </div>
                 </div>
             </React.Fragment>
         );

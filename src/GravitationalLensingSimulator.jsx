@@ -54,7 +54,7 @@ export default class GravitationalLensingSimulator extends React.Component {
                             </p>
                             <p>&nbsp;Source offset &#40;X1&#41;:&nbsp;
                                 <span class="highlight">
-                                    {this.state.parameters.sourceOffset != 0 ? (this.state.parameters.sourceOffset > 0 ? this.state.parameters.sourceOffset + " thousand light years (right)" : this.state.parameters.sourceOffset + " thousand light years (left)") : "N/A"}
+                                    {this.state.parameters.sourceOffset != 0 ? (this.state.parameters.sourceOffset > 0 ? -this.state.parameters.sourceOffset + " thousand light years (right)" : -this.state.parameters.sourceOffset + " thousand light years (left)") : "N/A"}
                                 </span>
                             </p>
                             <p>&nbsp;Cluster distance &#40;dL&#41;:&nbsp;
@@ -120,10 +120,10 @@ export default class GravitationalLensingSimulator extends React.Component {
                             (this.state.parameters.showLightAngle && this.state.parameters.showCluster) &&
                             <div id="angle">
                                 <p id="angle-text">&#8592;&nbsp;&nbsp;
-                                    {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
+                                    {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
                                 </p>
                                 <p id="angle-text">
-                                    {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
+                                    {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
                                 &nbsp;&nbsp;&#8594;</p>
                             </div>
                         }
@@ -146,7 +146,7 @@ export default class GravitationalLensingSimulator extends React.Component {
 
     handleNewParameters(newParams) {
         // distance to source must be greater than/equal to distance to cluster + 1
-        if (newParams.sourceDist < newParams.clusterDist + 1)
+        if (newParams.showCluster && newParams.sourceDist < newParams.clusterDist + 1)
             newParams.sourceDist = newParams.clusterDist + 1;
 
         this.setState({ parameters: newParams });

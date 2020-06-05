@@ -74,12 +74,12 @@ export default class MainView extends React.Component {
             me.leftPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
             me.rightPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
             me.rightArc = me.drawArc(
-                Math.atan2(me.midCluster.y - me.earth.y, (275 + me.props.params.r1 / 3000) - me.earth.x), 
+                Math.atan2(me.midCluster.y - me.earth.y, (275 + me.props.params.r1 / 10000) - me.earth.x), 
                 Math.atan2(me.sourceGalaxy.y - me.earth.y, me.sourceGalaxy.x - me.earth.x), 
                 true
             );
             me.leftArc = me.drawArc(
-                Math.atan2(me.midCluster.y - me.earth.y, (275 + me.props.params.r2 / 3000) - me.earth.x), 
+                Math.atan2(me.midCluster.y - me.earth.y, (275 + me.props.params.r2 / 10000) - me.earth.x), 
                 Math.atan2(me.sourceGalaxy.y - me.earth.y, me.sourceGalaxy.x - me.earth.x), 
                 false
             );
@@ -342,7 +342,7 @@ export default class MainView extends React.Component {
             }
         }
         
-        this.midCluster.y = 400 - this.props.params.clusterDist * 30;
+        this.midCluster.y = this.earth.y - this.props.params.clusterDist * 30;
         this.botCluster.scale = new PIXI.Point(1 / Math.sqrt(this.props.params.clusterDist), 1 / Math.sqrt(this.props.params.clusterDist));
     }
 
@@ -350,7 +350,7 @@ export default class MainView extends React.Component {
         const mass = this.props.params.clusterMass * 1000000000000;
         const clusterDist = this.props.params.clusterDist * 1000000000;
         const sourceDist = this.props.params.sourceDist * 1000000000;
-        const offset = this.props.params.sourceOffset * 1000;
+        const offset = -this.props.params.sourceOffset * 1000;
 
         let beta = Math.atan2(offset, sourceDist) * ARCSEC_PER_RADIAN;
         // console.log('source offset angle', beta);
@@ -362,7 +362,7 @@ export default class MainView extends React.Component {
         let rad_term = Math.pow((Math.pow(angle, 2) + 4 * omega * (sourceDist - clusterDist) / (sourceDist * clusterDist * LIGHT_YRS)), 0.5);
         let theta1 = (angle + rad_term) / 2;
         let theta2 = (angle - rad_term) / 2;
-        console.log('theta1, theta2, check beta', theta1 * 30000, theta2 * 30000, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
+        console.log('theta1, theta2, check beta', theta1 * 10000, theta2 * 10000, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
 
 
         let r1 = clusterDist * Math.tan(theta1);
@@ -394,44 +394,25 @@ export default class MainView extends React.Component {
         
         // scaling factor of 0.0003
         this.leftPathEarth.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
-        this.leftPathEarth.lineTo(275 + r2/3000, this.midCluster.y);
-        this.leftPathEarth.moveTo(275 + r2/3000, this.midCluster.y);
-        this.leftPathEarth.lineTo(275, 400);
+        this.leftPathEarth.lineTo(275 - r1/10000, this.midCluster.y);
+        this.leftPathEarth.moveTo(275 - r1/10000, this.midCluster.y);
+        this.leftPathEarth.lineTo(this.earth.x, this.earth.y);
 
         this.rightPathEarth.moveTo(this.sourceGalaxy.x, this.sourceGalaxy.y);
-        this.rightPathEarth.lineTo(275 + r1/3000, this.midCluster.y);
-        this.rightPathEarth.moveTo(275 + r1/3000, this.midCluster.y);
-        this.rightPathEarth.lineTo(275, 400);
+        this.rightPathEarth.lineTo(275 - r2/10000, this.midCluster.y);
+        this.rightPathEarth.moveTo(275 - r2/10000, this.midCluster.y);
+        this.rightPathEarth.lineTo(this.earth.x, this.earth.y);
 
         if (this.props.params.showOriginalPath) {
-            let sideLength;
             this.leftPathLight.lineStyle(2, 0xba341e);
             this.rightPathLight.lineStyle(2, 0xba341e);
 
-            this.leftPathLight.moveTo(275 + r2/3000, this.midCluster.y);
-            if (offset > 0)
-                sideLength = this.calculateLightPaths(r2) - Math.abs(this.props.params.sourceOffset / 30);
-            else
-                sideLength = this.calculateLightPaths(r2) + Math.abs(this.props.params.sourceOffset / 30);
-            this.leftPathLight.lineTo(this.earth.x - sideLength, this.earth.y);
-            // this.leftPathLight.lineTo(this.earth.x + y2/3000, this.earth.y);
+            this.leftPathLight.moveTo(275 - r1/10000, this.midCluster.y);
+            this.leftPathLight.lineTo(this.earth.x - y1 / 10000, this.earth.y);
             
-            this.rightPathLight.moveTo(275 + r1/3000, this.midCluster.y);
-            if (offset > 0)
-                sideLength = this.calculateLightPaths(r1) + Math.abs(this.props.params.sourceOffset / 30);
-            else 
-                sideLength = this.calculateLightPaths(r1) - Math.abs(this.props.params.sourceOffset / 30);
-            this.rightPathLight.lineTo(this.earth.x + sideLength, this.earth.y);
-            // this.rightPathLight.lineTo(this.earth.x + y1/3000, this.earth.y);
+            this.rightPathLight.moveTo(275 - r2/10000, this.midCluster.y);
+            this.rightPathLight.lineTo(this.earth.x - y2 / 10000, this.earth.y);
         }
-
-        this.viewGalaxy.x = 275 + beta * 5;
-        this.leftGalaxy.x = 275 + theta1 * ARCSEC_PER_RADIAN * 5;
-        this.rightGalaxy.x = 275 + theta2 * ARCSEC_PER_RADIAN * 5;
-        // console.log('left:', this.leftGalaxy.x);
-        // console.log('right:', this.rightGalaxy.x);
-        // console.log('theta 1:', theta1 * ARCSEC_PER_RADIAN);
-        // console.log('theta 2:', theta2 * ARCSEC_PER_RADIAN);
 
         this.props.params.beta = beta;
         this.props.params.y1 = y1;
@@ -446,11 +427,16 @@ export default class MainView extends React.Component {
     updateGalaxies() {
         // scaling factor of 0.03
         // source
-        this.sourceGalaxy.x = 275 + this.props.params.sourceOffset / 30;
+        this.sourceGalaxy.x = 275 + this.props.params.sourceOffset / 10;
         this.sourceGalaxy.y = 400 - this.props.params.sourceDist * 30;
         // earth view
-        this.viewGalaxy.x = 275 + this.props.params.sourceOffset / 30;
+        // this.viewGalaxy.x = 275 + this.props.params.sourceOffset / 10;
 
+        this.viewGalaxy.x = 275 - this.props.params.beta * 3;
+        this.leftGalaxy.x = 275 - this.props.params.theta1 * 3;
+        this.rightGalaxy.x = 275 - this.props.params.theta2 * 3;
+        console.log(this.sourceGalaxy.x);
+        console.log(this.sourceGalaxy.y);
     }
 
     updateMidLine() {
@@ -486,9 +472,9 @@ export default class MainView extends React.Component {
             this.rightArcArrow.lineStyle(2, 0xe8c3c3);
             this.leftArcArrow.lineStyle(2, 0xe8c3c3);
 
-            let rightArcAngleStart = Math.atan2(this.midCluster.y - this.earth.y, (275 + this.props.params.r1 / 3000) - this.earth.x);
+            let rightArcAngleStart = Math.atan2(this.midCluster.y - this.earth.y, (275 - this.props.params.r2 / 10000) - this.earth.x);
             let rightArcAngleEnd = Math.atan2(this.sourceGalaxy.y - this.earth.y, this.sourceGalaxy.x - this.earth.x);
-            let leftArcAngleStart = Math.atan2(this.midCluster.y - this.earth.y, (275 + this.props.params.r2 / 3000) - this.earth.x);
+            let leftArcAngleStart = Math.atan2(this.midCluster.y - this.earth.y, (275 - this.props.params.r1 / 10000) - this.earth.x);
             let leftArcAngleEnd = Math.atan2(this.sourceGalaxy.y - this.earth.y, this.sourceGalaxy.x - this.earth.x);
 
             this.rightArc.arc(
@@ -502,7 +488,7 @@ export default class MainView extends React.Component {
             this.leftArc.arc(
                 this.earth.x,
                 this.earth.y,
-                20,
+                24,
                 leftArcAngleStart, 
                 leftArcAngleEnd, 
                 false
@@ -510,15 +496,15 @@ export default class MainView extends React.Component {
 
             // finished drawing actual arc, move onto arrowheads
             let rightArcArrowTip = convertPolarToRect(30, rightArcAngleStart, this.earth);
-            let leftArcArrowTip = convertPolarToRect(20, leftArcAngleStart, this.earth);
+            let leftArcArrowTip = convertPolarToRect(24, leftArcAngleStart, this.earth);
 
             // for arrow tips
-            let rightTip = Math.atan2((this.midCluster.y - 10 * this.props.params.clusterDist) - this.earth.y, (275 + this.props.params.r1 / 3000 - 10 * this.props.params.clusterDist) - this.earth.x);
-            let leftTip = Math.atan2((this.midCluster.y - 10 * this.props.params.clusterDist) - this.earth.y, (275 + this.props.params.r2 / 3000 + 10 * this.props.params.clusterDist) - this.earth.x);
-            let a = convertPolarToRect(36, rightTip, this.earth);  // r + 6
-            let b = convertPolarToRect(24, rightTip, this.earth);  // r - 6
-            let c = convertPolarToRect(26, leftTip, this.earth);   // r + 6
-            let d = convertPolarToRect(14, leftTip, this.earth);   // r - 6
+            let rightTip = Math.atan2((this.midCluster.y - 10 * this.props.params.clusterDist) - this.earth.y, (275 - this.props.params.r2 / 10000 - 10 * this.props.params.clusterDist) - this.earth.x);
+            let leftTip = Math.atan2((this.midCluster.y - 10 * this.props.params.clusterDist) - this.earth.y, (275 - this.props.params.r1 / 10000 + 10 * this.props.params.clusterDist) - this.earth.x);
+            let a = convertPolarToRect(34, rightTip, this.earth);  // r + 4
+            let b = convertPolarToRect(26, rightTip, this.earth);  // r - 4
+            let c = convertPolarToRect(28, leftTip, this.earth);   // r + 4
+            let d = convertPolarToRect(20, leftTip, this.earth);   // r - 4
 
             this.rightArcArrow.moveTo(rightArcArrowTip.x, rightArcArrowTip.y);
             this.rightArcArrow.lineTo(a.x, a.y);
@@ -532,19 +518,4 @@ export default class MainView extends React.Component {
         }
     }
 
-    calculateLightPaths(r) {
-        // we need to know:
-        // this.earth.x + r/3000, this.midCluster.y
-        // this.sourceGalaxy.x, this.sourceGalaxy.y
-        let distFromSourceToCluster = this.midCluster.y - this.sourceGalaxy.y;  // 150
-        let distFromSourceToLightBend = Math.pow((Math.pow((this.sourceGalaxy.x - (this.earth.x + r/3000)), 2) + Math.pow((this.sourceGalaxy.y - this.midCluster.y), 2)), 0.5);
-        
-        let phi = Math.asin(distFromSourceToCluster / distFromSourceToLightBend);
-        let theta = Math.PI / 2 - phi;
-        
-        let length = (this.earth.y - this.sourceGalaxy.y) * Math.tan(theta); 
-        // console.log("length:", length);
-        
-        return length;
-    }
 }
