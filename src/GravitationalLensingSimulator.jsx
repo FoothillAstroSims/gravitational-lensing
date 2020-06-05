@@ -19,11 +19,11 @@ export default class GravitationalLensingSimulator extends React.Component {
                 beta: 0.00,
                 y1: 0.00,
                 y2: 0.00,
-                theta1: 11.526,     // default values
-                theta2: -11.526,    // default values
-                r1: 279388.724,     // default values
-                r2: -279388.724,    // default values
-                phi: 0.00011176     // default values
+                theta1: 34.57686,       // init values
+                theta2: -34.57686,      // init values
+                r1: 167633.236,         // init values
+                r2: -167633.236,        // init values
+                phi: 0.00018626         // init values
             }   
         };
         this.state = this.initialState;

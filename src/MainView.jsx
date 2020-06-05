@@ -56,8 +56,8 @@ export default class MainView extends React.Component {
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 50);
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
             // me.virtualGalaxyContainer = me.drawVirtualGalaxy(resources.virtualGalaxy, 200, 50);
-            me.leftGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 217.37412417511337, 495);  // from calculations in updatePaths()
-            me.rightGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 332.62587582488663, 495);  // from calculations in updatePaths()
+            me.leftGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 275 - me.props.params.theta1 * 3, 495);   // from calculations in updatePaths()
+            me.rightGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 275 - me.props.params.theta2 * 3, 495);  // from calculations in updatePaths()
             me.rectangle = me.drawRectangle();
             me.description = me.drawLabel('View from Earth', 275, 540);
             me.eastText = me.drawLabel('E', 20, 540);
@@ -387,16 +387,16 @@ export default class MainView extends React.Component {
         let rad_term = Math.pow((Math.pow(angle, 2) + 4 * omega * (sourceDist - clusterDist) / (sourceDist * clusterDist * LIGHT_YRS)), 0.5);
         let theta1 = (angle + rad_term) / 2;
         let theta2 = (angle - rad_term) / 2;
-        console.log('theta1, theta2, check beta', theta1 * 10000, theta2 * 10000, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
+        console.log('theta1, theta2, check beta', theta1 * ARCSEC_PER_RADIAN, theta2 * ARCSEC_PER_RADIAN, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
 
 
         let r1 = clusterDist * Math.tan(theta1);
         let r2 = clusterDist * Math.tan(theta2);
-        // console.log ('r1, r2', r1, r2);
+        console.log ('r1, r2', r1, r2);
 
 
         let phi = omega / (r1 * LIGHT_YRS);
-        // console.log('phi (rad, degrees)', phi, phi * 180 / Math.PI);
+        console.log('phi (rad, degrees)', phi, phi * 180 / Math.PI);
 
 
         // calculate how far off to the side the observed light would have landed
@@ -406,8 +406,7 @@ export default class MainView extends React.Component {
         let y1 = offset - sourceDist * Math.tan(theta1 - phi);
         let y2 = offset - sourceDist * Math.sin(alpha);
         // console.log('original ray offset', y1, y2);
-        console.log("ANGLE", Math.atan2())
-        
+
 
         this.leftPathEarth.clear();
         this.rightPathEarth.clear();
@@ -460,8 +459,6 @@ export default class MainView extends React.Component {
         this.viewGalaxy.x = 275 - this.props.params.beta * 3;
         this.leftGalaxy.x = 275 - this.props.params.theta1 * 3;
         this.rightGalaxy.x = 275 - this.props.params.theta2 * 3;
-        console.log(this.sourceGalaxy.x);
-        console.log(this.sourceGalaxy.y);
     }
 
     updateMidLine() {
