@@ -93,12 +93,12 @@ nav a:hover {
     overflow: hidden;
     left: 60%;
     top: -560px;
-    margin-bottom: -69px;
+    margin-bottom: -59px;
     font-size: 12px;
     max-width: 250px;
 }
 
-#angle {
+/* #angle {
     position: relative;
     overflow: hidden;
     left: 20%;
@@ -110,9 +110,8 @@ nav a:hover {
 
 #angle-text {
     display: inline-block;
-    /* padding-right: 75px; */
     min-width: 205px;
-}
+} */
 
 p {
     margin: 5px 0px 0px;
@@ -174,8 +173,4 @@ p {
 
 #feedback:hover {
     box-shadow: 0 5px 15px rgba(255, 193, 8, .4);
-}
-
-#reverse {
-    transform: rotateY(180deg);
 }

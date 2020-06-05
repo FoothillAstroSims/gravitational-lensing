@@ -9,7 +9,7 @@ export default class GravitationalLensingSimulator extends React.Component {
         this.initialState = {
             parameters: {
                 clusterMass: 50,
-                clusterDist: 5,
+                clusterDist: 1,
                 sourceDist: 10,
                 sourceOffset: 0,
                 showCluster: false, 
@@ -47,47 +47,34 @@ export default class GravitationalLensingSimulator extends React.Component {
                             params={this.state.parameters}
                         />
                         <div id="data">
-                            <p>&nbsp;Source distance &#40;dS&#41;:&nbsp;
+                            <p>&nbsp;Source distance:&nbsp;&nbsp;
                                 <span class="highlight">
                                     {this.state.parameters.sourceDist} billion light years
                                 </span>
                             </p>
-                            <p>&nbsp;Source offset &#40;X1&#41;:&nbsp;
+                            <p>&nbsp;Source offset:&nbsp;&nbsp;
                                 <span class="highlight">
                                     {this.state.parameters.sourceOffset != 0 ? (this.state.parameters.sourceOffset > 0 ? -this.state.parameters.sourceOffset + " thousand light years (right)" : -this.state.parameters.sourceOffset + " thousand light years (left)") : "N/A"}
                                 </span>
                             </p>
-                            <p>&nbsp;Cluster distance &#40;dL&#41;:&nbsp;
+                            <p>&nbsp;Cluster distance:&nbsp;&nbsp;
                                 <span class="highlight">
                                     {this.state.parameters.showCluster ? this.state.parameters.clusterDist + " billion light years" : "N/A"}
                                 </span>
                             </p>
-                            <p>&nbsp;Cluster mass &#40;M&#41;:&nbsp;
+                            <p>&nbsp;Cluster mass:&nbsp;&nbsp;
                                 <span class="highlight">
                                     {this.state.parameters.showCluster ? this.state.parameters.clusterMass + " trillion solar masses" : "N/A"}
                                 </span>
                             </p>
-                            <p>&nbsp;Source offset angle &#40;beta&#41;:&nbsp;
+                            {/* <p>&nbsp;Source offset angle &#40;beta&#41;:&nbsp;
                                 <span class="highlight">
                                     {Number.parseFloat(this.state.parameters.beta).toFixed(2)} arcseconds
-                                    {/* LEFT = EAST, RIGHT = WEST */}
                                 </span>
-                            </p>
-                            {
-                                (this.state.parameters.showOriginalPath && this.state.parameters.showCluster) &&
-                                <p>&nbsp;Original ray offset &#40;Y1, Y2&#41;:<br/>
-                                    <span class="highlight">
-                                        &nbsp;{Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(2)} thousand light years &#40;left&#41;
-                                    </span>
-                                    <br/>
-                                    <span class="highlight">
-                                        &nbsp;{Number.parseFloat(this.state.parameters.y2 / 1000).toFixed(2)} thousand light years &#40;right&#41;
-                                    </span>
-                                </p>
-                            }
+                            </p> */}
                         </div>
                         {
-                            (this.state.parameters.showCluster) &&
+                            (this.state.parameters.showCluster && this.state.parameters.showOriginalPath) &&
                             <div id="debug">
                                 {/* <p>&nbsp;theta 1:&nbsp;
                                     <span class="highlight">
@@ -99,7 +86,7 @@ export default class GravitationalLensingSimulator extends React.Component {
                                         {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
                                     </span>
                                 </p> */}
-                                <p>&nbsp;r1:&nbsp;
+                                {/* <p>&nbsp;r1:&nbsp;
                                     <span class="highlight">
                                         {Number.parseFloat(this.state.parameters.r1 / 1000).toFixed(3)} thousand light years
                                     </span>
@@ -113,20 +100,32 @@ export default class GravitationalLensingSimulator extends React.Component {
                                     <span class="highlight">
                                         {Number.parseFloat(this.state.parameters.phi).toFixed(8)} radians
                                     </span>
-                                </p>
+                                </p> */}
+                                {
+                                    // (this.state.parameters.showOriginalPath && this.state.parameters.showCluster) &&
+                                    <p>&nbsp;Original ray offset:<br/>
+                                        <span class="highlight">
+                                            &nbsp;{Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(2)} thousand light years &#40;left&#41;
+                                        </span>
+                                        <br/>
+                                        <span class="highlight">
+                                            &nbsp;{Number.parseFloat(this.state.parameters.y2 / 1000).toFixed(2)} thousand light years &#40;right&#41;
+                                        </span>
+                                    </p>
+                                }
                             </div>
                         }
-                        {
-                            (this.state.parameters.showLightAngle && this.state.parameters.showCluster) &&
-                            <div id="angle">
-                                <p id="angle-text">&#8592;&nbsp;&nbsp;
-                                    {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
-                                </p>
-                                <p id="angle-text">
-                                    {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
-                                &nbsp;&nbsp;&#8594;</p>
-                            </div>
-                        }
+                            {/* {
+                                (this.state.parameters.showLightAngle && this.state.parameters.showCluster) &&
+                                <div id="angle">
+                                    <p id="angle-text">&#8592;&nbsp;&nbsp;
+                                        {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
+                                    </p>
+                                    <p id="angle-text">
+                                        {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
+                                    &nbsp;&nbsp;&#8594;</p>
+                                </div>
+                            } */}
                     </div>
                     <div className="box">
                         <ClusterControls

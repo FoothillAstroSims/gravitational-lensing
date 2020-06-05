@@ -52,27 +52,27 @@ export default class MainView extends React.Component {
             me.resources = resources;
             me.earth = me.drawEarth(resources.earth);
             me.sourceGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 400 - this.props.params.sourceDist * 30);
-            me.viewGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
+            me.viewGalaxy = me.drawRealGalaxy(resources.realGalaxy, 275, 495);
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 50);
             // me.realGalaxyContainer = me.drawRealGalaxy(resources.realGalaxy, 275, 480);
             // me.virtualGalaxyContainer = me.drawVirtualGalaxy(resources.virtualGalaxy, 200, 50);
-            me.leftGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 217.37412417511337, 480);  // from calculations in updatePaths()
-            me.rightGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 332.62587582488663, 480);  // from calculations in updatePaths()
+            me.leftGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 217.37412417511337, 495);  // from calculations in updatePaths()
+            me.rightGalaxy = me.drawVirtualGalaxy(resources.virtualGalaxy, 332.62587582488663, 495);  // from calculations in updatePaths()
             me.rectangle = me.drawRectangle();
-            me.description = me.drawLabel('View from Earth', 275, 525);
-            me.eastText = me.drawLabel('E', 20, 525);
-            me.westText = me.drawLabel('W', 530, 525);
+            me.description = me.drawLabel('View from Earth', 275, 540);
+            me.eastText = me.drawLabel('E', 20, 540);
+            me.westText = me.drawLabel('W', 530, 540);
             me.earthText = me.drawLabel('Earth', 165, me.earth.y);
             me.galaxyText = me.drawLabel('Distant\ngalaxy', me.sourceGalaxy.x + 115, me.sourceGalaxy.y);
-            me.midLine = me.drawLine(me.sourceGalaxy.x, me.sourceGalaxy.y, me.earth.x, me.earth.y, 1);
+            me.midLine = me.drawLine(me.sourceGalaxy.x, me.sourceGalaxy.y, me.earth.x, me.earth.y);
             me.earthLine = me.drawLine(200, me.earth.y, 250, me.earth.y, 2);
             me.galaxyLine = me.drawLine(me.sourceGalaxy.x + 25, me.sourceGalaxy.y, me.sourceGalaxy.x + 75, me.sourceGalaxy.y, 2);
             me.midCluster = me.drawCluster(resources.cluster, 275, 400 - this.props.params.clusterDist * 30);
-            me.botCluster = me.drawCluster(resources.cluster, 275, 480);
+            me.botCluster = me.drawCluster(resources.cluster, 275, 495);
             me.leftPathEarth = me.drawPath(100, me.midCluster.y, 275, 400);
             me.rightPathEarth = me.drawPath(450, me.midCluster.y, 275, 400);
-            me.leftPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
-            me.rightPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y, 1);
+            me.leftPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y);
+            me.rightPathLight = me.drawLine(me.midCluster.x, me.midCluster.y, me.earth.x, me.earth.y);
             me.rightArc = me.drawArc(
                 Math.atan2(me.midCluster.y - me.earth.y, (275 + me.props.params.r1 / 10000) - me.earth.x), 
                 Math.atan2(me.sourceGalaxy.y - me.earth.y, me.sourceGalaxy.x - me.earth.x), 
@@ -83,8 +83,23 @@ export default class MainView extends React.Component {
                 Math.atan2(me.sourceGalaxy.y - me.earth.y, me.sourceGalaxy.x - me.earth.x), 
                 false
             );
-            me.rightArcArrow = me.drawArrow(me.earth, true);  // temp location
-            me.leftArcArrow = me.drawArrow(me.earth, false);  // temp location
+            me.rightArcArrow = me.drawArrow();  // temp location
+            me.leftArcArrow = me.drawArrow();   // temp location
+
+            me.betaLine = me.drawLine(me.botCluster.x, 465, me.botCluster.x, 465, 2, "0xe9c452");
+            me.rightLine = me.drawLine(me.botCluster.x, 525, me.botCluster.x, 525, 2, "0xa1a0da");
+            me.leftLine = me.drawLine(me.botCluster.x, 525, me.botCluster.x, 525, 2, "0xa1a0da");
+
+            me.betaText = me.drawLabel("0.00 arcseconds", me.botCluster.x, 445, 15, "0xe9c452", false);
+            me.leftText = me.drawLabel("11.53 arcseconds", 125, 542, 15, "0xa1a0da", false);
+            me.rightText = me.drawLabel("-11.53 arcseconds", 425, 542, 15, "0xa1a0da", false);
+
+            me.betaTick = me.drawLine(me.botCluster.x, 460, me.botCluster.x, 470, 2, "0xe9c452", false);
+            me.thetaTick = me.drawLine(me.botCluster.x, 520, me.botCluster.x, 530, 2, "0xa1a0da", false);
+
+            me.betaArrow = me.drawArrow("0xe8c3c3");
+            me.rightArrow = me.drawArrow("0xa1a0da");
+            me.leftArrow = me.drawArrow("0xa1a0da");
         });
     }
 
@@ -173,19 +188,20 @@ export default class MainView extends React.Component {
         // line width, line color
         rectangle.lineStyle(2, 0xFFFFFF);
         // top left x, top left y, width, height
-        rectangle.drawRect(0, 450, 550, 60); 
+        rectangle.drawRect(0, 465, 550, 60); 
 
         this.app.stage.addChild(rectangle);
         return rectangle;
     }
 
-    drawLabel(text, x, y) {
+    drawLabel(text, x, y, size=16, color="0xffffff", visible=true) {
         const label = new PIXI.Text(text, {
             fontFamily: 'Exo',
-            fontSize: 16,
-            fill: 0xFFFFFF
+            fontSize: size,
+            fill: color
         });
 
+        label.visible = visible;
         label.resolution = 2;
         label.anchor.set(0.5);
         label.position = new PIXI.Point(x, y);
@@ -194,33 +210,33 @@ export default class MainView extends React.Component {
         return label;
     }
 
-    drawLine(x1, y1, x2, y2, width) {
+    drawLine(x1, y1, x2, y2, width=1, color="0xffffff", visible=true) {
         const line = new PIXI.Graphics();
 
-        line.lineStyle(width, 0xFFFFFF);
+        line.lineStyle(width, color);
         line.moveTo(x1, y1);
         line.lineTo(x2, y2);
+        line.visible = visible;
 
         this.app.stage.addChild(line);
         return line;
     }
 
-    drawArrow(tip, east) {
+    drawArrow(color="0xe8c3c3") {
         const arrow = new PIXI.Graphics();
-        arrow.lineStyle(2, 0xe8c3c3);
-        arrow.visible = false;
+        arrow.lineStyle(2, color);
 
-        if (east) {
-            arrow.moveTo(tip.x, tip.y);
-            arrow.lineTo(tip.x - 5, tip.y - 5);
-            arrow.moveTo(tip.x, tip.y);
-            arrow.lineTo(tip.x - 5, tip.y + 5);
-        } else {
-            arrow.moveTo(tip.x, tip.y);
-            arrow.lineTo(tip.x + 5, tip.y - 5);
-            arrow.moveTo(tip.x, tip.y);
-            arrow.lineTo(tip.x + 5, tip.y + 5);
-        }
+        // if (east) {
+        //     arrow.moveTo(tip.x, tip.y);
+        //     arrow.lineTo(tip.x - 5, tip.y - 5);
+        //     arrow.moveTo(tip.x, tip.y);
+        //     arrow.lineTo(tip.x - 5, tip.y + 5);
+        // } else {
+        //     arrow.moveTo(tip.x, tip.y);
+        //     arrow.lineTo(tip.x + 5, tip.y - 5);
+        //     arrow.moveTo(tip.x, tip.y);
+        //     arrow.lineTo(tip.x + 5, tip.y + 5);
+        // }
 
         this.app.stage.addChild(arrow);
         return arrow;
@@ -302,6 +318,7 @@ export default class MainView extends React.Component {
         this.updateMidLine();
         this.updateLabels();
         this.updateArcs();
+        this.updateViewPort();
     }
 
     updateVisibility() {
@@ -329,6 +346,14 @@ export default class MainView extends React.Component {
         this.rightArc.visible = this.props.params.showCluster;
         this.leftArcArrow.visible = this.props.params.showCluster;
         this.rightArcArrow.visible = this.props.params.showCluster;
+
+        this.betaLine.visible = this.props.params.showCluster;
+        this.betaText.visible = this.props.params.showCluster;
+        this.betaTick.visible = this.props.params.showCluster;
+        
+        this.rightText.visible = (this.props.params.showCluster && this.props.params.showLightAngle);
+        this.leftText.visible = (this.props.params.showCluster && this.props.params.showLightAngle);
+        this.thetaTick.visible = (this.props.params.showCluster && this.props.params.showLightAngle); 
     }
     
     updateCluster() {
@@ -518,4 +543,59 @@ export default class MainView extends React.Component {
         }
     }
 
+    updateViewPort() {
+        this.betaLine.clear();
+        this.rightLine.clear();
+        this.leftLine.clear();
+
+        this.betaArrow.clear();
+        this.rightArrow.clear();
+        this.leftArrow.clear();
+
+        if (this.props.params.showCluster) {
+            this.betaLine.lineStyle(2, 0xe9c452);
+            this.betaLine.moveTo(this.botCluster.x, 465);
+            this.betaLine.lineTo(this.viewGalaxy.x, 465);
+
+            this.betaArrow.lineStyle(2, 0xe9c452);
+            this.betaArrow.moveTo(this.viewGalaxy.x, 465);
+            if (this.props.params.beta > 0) {   // left 
+                this.betaArrow.lineTo(this.viewGalaxy.x + 5, 460);
+                this.betaArrow.moveTo(this.viewGalaxy.x, 465);
+                this.betaArrow.lineTo(this.viewGalaxy.x + 5, 470);
+            } 
+            if (this.props.params.beta < 0) {   // right
+                this.betaArrow.lineTo(this.viewGalaxy.x - 5, 460);
+                this.betaArrow.moveTo(this.viewGalaxy.x, 465);
+                this.betaArrow.lineTo(this.viewGalaxy.x - 5, 470);
+            }
+
+            this.betaText.text = Number.parseFloat(this.props.params.beta).toFixed(2) + " arcseconds";
+
+            if (this.props.params.showLightAngle) {
+                this.rightLine.lineStyle(2, 0xa1a0da);
+                this.leftLine.lineStyle(2, 0xa1a0da);
+                this.rightArrow.lineStyle(2, 0xa1a0da);
+                this.leftArrow.lineStyle(2, 0xa1a0da);
+
+                this.rightLine.moveTo(this.botCluster.x, 525);
+                this.rightLine.lineTo(this.rightGalaxy.x, 525);
+                this.leftLine.moveTo(this.botCluster.x, 525);
+                this.leftLine.lineTo(this.leftGalaxy.x, 525);
+
+                this.rightArrow.moveTo(this.rightGalaxy.x, 525);
+                this.rightArrow.lineTo(this.rightGalaxy.x - 5, 520);
+                this.rightArrow.moveTo(this.rightGalaxy.x, 525);
+                this.rightArrow.lineTo(this.rightGalaxy.x - 5, 530);
+
+                this.leftArrow.moveTo(this.leftGalaxy.x, 525);
+                this.leftArrow.lineTo(this.leftGalaxy.x + 5, 520);
+                this.leftArrow.moveTo(this.leftGalaxy.x, 525);
+                this.leftArrow.lineTo(this.leftGalaxy.x + 5, 530);
+
+                this.leftText.text = Number.parseFloat(this.props.params.theta1).toFixed(2) + " arcseconds";
+                this.rightText.text = Number.parseFloat(this.props.params.theta2).toFixed(2) + " arcseconds";
+            }
+        }
+    }
 }
