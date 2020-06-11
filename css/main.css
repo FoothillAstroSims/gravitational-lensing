@@ -177,3 +177,7 @@ p {
 #feedback:hover {
     box-shadow: 0 5px 15px rgba(255, 193, 8, .4);
 }
+
+#reversed {
+    direction: rtl;
+}

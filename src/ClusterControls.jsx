@@ -10,7 +10,6 @@ export default class ClusterControls extends React.Component {
         this.changeDirectPath = this.changeDirectPath.bind(this);
         this.changeOriginalPath = this.changeOriginalPath.bind(this);
         this.changeLightAngle = this.changeLightAngle.bind(this);
-        // this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
@@ -40,6 +39,7 @@ export default class ClusterControls extends React.Component {
                         />
                         <br/><br/>
                         <SingleVariableControl
+                            id="reversed"
                             name="sourceOffset" 
                             displayName="Source offset (thousand light yrs)"
                             min={-500}
@@ -135,12 +135,6 @@ export default class ClusterControls extends React.Component {
         );
     }
 
-    /*
-    handleChange(newParams) {
-        this.props.onChange(newParams);
-    }
-    */
-
     handleSingleVariableChange(key, value) {
         this.props.onChange({
             ...this.props.params,
@@ -151,7 +145,8 @@ export default class ClusterControls extends React.Component {
     changeCluster() {
         this.props.onChange({
             ...this.props.params,
-            showCluster: !this.props.params.showCluster
+            showCluster: !this.props.params.showCluster,
+            // clusterDist: 5
         });
     }
 
@@ -190,13 +185,12 @@ ClusterControls.propTypes = {
         showOriginalPath: PropTypes.bool.isRequired,
         showLightAngle: PropTypes.bool.isRequired,
         beta: PropTypes.number.isRequired,
-        y1: PropTypes.number.isRequired,
-        y2: PropTypes.number.isRequired,
         theta1: PropTypes.number.isRequired,
         theta2: PropTypes.number.isRequired,
         r1: PropTypes.number.isRequired,
         r2: PropTypes.number.isRequired,
-        phi: PropTypes.number.isRequired
+        y1: PropTypes.number.isRequired,
+        y2: PropTypes.number.isRequired,
     }).isRequired,
     onChange: PropTypes.func.isRequired
 };

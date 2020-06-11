@@ -90,11 +90,11 @@ export default class MainView extends React.Component {
             me.rightLine = me.drawLine(me.botCluster.x, 525, me.botCluster.x, 525, 2, "0xa1a0da");
             me.leftLine = me.drawLine(me.botCluster.x, 525, me.botCluster.x, 525, 2, "0xa1a0da");
 
-            me.betaText = me.drawLabel("0.00 arcseconds", me.botCluster.x, 445, 15, "0xe9c452", false);
+            me.betaText = me.drawLabel("0.00 arcseconds", me.botCluster.x, 445, 15, "0xe9c452");
             me.leftText = me.drawLabel("11.53 arcseconds", 125, 542, 15, "0xa1a0da", false);
             me.rightText = me.drawLabel("-11.53 arcseconds", 425, 542, 15, "0xa1a0da", false);
 
-            me.betaTick = me.drawLine(me.botCluster.x, 460, me.botCluster.x, 470, 2, "0xe9c452", false);
+            me.betaTick = me.drawLine(me.botCluster.x, 460, me.botCluster.x, 470, 2, "0xe9c452");
             me.thetaTick = me.drawLine(me.botCluster.x, 520, me.botCluster.x, 530, 2, "0xa1a0da", false);
 
             me.betaArrow = me.drawArrow("0xe8c3c3");
@@ -310,15 +310,17 @@ export default class MainView extends React.Component {
     // is much better since it's controlled by React (and probably more efficient)
     // componentDidUpdate() essentially runs every time the parent (in this case, main.jsx) has its state variables
     // changed. Since you passed in the parameters, it will run every time parameters gets changed
-    componentDidUpdate() {
-        this.updateVisibility();
-        this.updateCluster();
-        this.updateGalaxies();
-        this.updatePaths();
-        this.updateMidLine();
-        this.updateLabels();
-        this.updateArcs();
-        this.updateViewPort();
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps !== this.props) {
+            this.updateVisibility();
+            this.updateCluster();
+            this.updateGalaxies();
+            this.updatePaths();
+            this.updateMidLine();
+            this.updateLabels();
+            this.updateArcs();
+            this.updateViewPort();
+        }
     }
 
     updateVisibility() {
@@ -346,10 +348,6 @@ export default class MainView extends React.Component {
         this.rightArc.visible = this.props.params.showCluster;
         this.leftArcArrow.visible = this.props.params.showCluster;
         this.rightArcArrow.visible = this.props.params.showCluster;
-
-        this.betaLine.visible = this.props.params.showCluster;
-        this.betaText.visible = this.props.params.showCluster;
-        this.betaTick.visible = this.props.params.showCluster;
         
         this.rightText.visible = (this.props.params.showCluster && this.props.params.showLightAngle);
         this.leftText.visible = (this.props.params.showCluster && this.props.params.showLightAngle);
@@ -375,7 +373,7 @@ export default class MainView extends React.Component {
         const mass = this.props.params.clusterMass * 1000000000000;
         const clusterDist = this.props.params.clusterDist * 1000000000;
         const sourceDist = this.props.params.sourceDist * 1000000000;
-        const offset = -this.props.params.sourceOffset * 1000;
+        const offset = this.props.params.sourceOffset * 1000;
 
         let beta = Math.atan2(offset, sourceDist) * ARCSEC_PER_RADIAN;
         // console.log('source offset angle', beta);
@@ -387,16 +385,16 @@ export default class MainView extends React.Component {
         let rad_term = Math.pow((Math.pow(angle, 2) + 4 * omega * (sourceDist - clusterDist) / (sourceDist * clusterDist * LIGHT_YRS)), 0.5);
         let theta1 = (angle + rad_term) / 2;
         let theta2 = (angle - rad_term) / 2;
-        console.log('theta1, theta2, check beta', theta1 * ARCSEC_PER_RADIAN, theta2 * ARCSEC_PER_RADIAN, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
+        // console.log('theta1, theta2, check beta', theta1 * ARCSEC_PER_RADIAN, theta2 * ARCSEC_PER_RADIAN, (theta1 + theta2) * ARCSEC_PER_RADIAN, beta);
 
 
         let r1 = clusterDist * Math.tan(theta1);
         let r2 = clusterDist * Math.tan(theta2);
-        console.log ('r1, r2', r1, r2);
+        // console.log ('r1, r2', r1, r2);
 
 
         let phi = omega / (r1 * LIGHT_YRS);
-        console.log('phi (rad, degrees)', phi, phi * 180 / Math.PI);
+        // console.log('phi (rad, degrees)', phi, phi * 180 / Math.PI);
 
 
         // calculate how far off to the side the observed light would have landed
@@ -438,20 +436,19 @@ export default class MainView extends React.Component {
             this.rightPathLight.lineTo(this.earth.x - y2 / 10000, this.earth.y);
         }
 
-        this.props.params.beta = beta;
-        this.props.params.y1 = y1;
-        this.props.params.y2 = y2;
-        this.props.params.theta1 = theta1 * ARCSEC_PER_RADIAN;
-        this.props.params.theta2 = theta2 * ARCSEC_PER_RADIAN;
-        this.props.params.r1 = r1;
-        this.props.params.r2 = r2;
-        this.props.params.phi = phi;
+        this.props.onBetaUpdate(beta);
+        this.props.onTheta1Update(theta1 * ARCSEC_PER_RADIAN);
+        this.props.onTheta2Update(theta2 * ARCSEC_PER_RADIAN);
+        this.props.onR1Update(r1);
+        this.props.onR2Update(r2);
+        this.props.onY1Update(y1);
+        this.props.onY2Update(y2);
     }
 
     updateGalaxies() {
         // scaling factor of 0.03
         // source
-        this.sourceGalaxy.x = 275 + this.props.params.sourceOffset / 10;
+        this.sourceGalaxy.x = 275 - this.props.params.sourceOffset / 10;
         this.sourceGalaxy.y = 400 - this.props.params.sourceDist * 30;
         // earth view
         // this.viewGalaxy.x = 275 + this.props.params.sourceOffset / 10;
@@ -549,50 +546,50 @@ export default class MainView extends React.Component {
         this.rightArrow.clear();
         this.leftArrow.clear();
 
-        if (this.props.params.showCluster) {
-            this.betaLine.lineStyle(2, 0xe9c452);
-            this.betaLine.moveTo(this.botCluster.x, 465);
-            this.betaLine.lineTo(this.viewGalaxy.x, 465);
+        this.betaLine.lineStyle(2, 0xe9c452);
+        this.betaLine.moveTo(this.botCluster.x, 465);
+        this.betaLine.lineTo(this.viewGalaxy.x, 465);
+        
 
-            this.betaArrow.lineStyle(2, 0xe9c452);
+        this.betaArrow.lineStyle(2, 0xe9c452);
+        this.betaArrow.moveTo(this.viewGalaxy.x, 465);
+        if (this.props.params.beta > 0) {   // left 
+            this.betaArrow.lineTo(this.viewGalaxy.x + 5, 460);
             this.betaArrow.moveTo(this.viewGalaxy.x, 465);
-            if (this.props.params.beta > 0) {   // left 
-                this.betaArrow.lineTo(this.viewGalaxy.x + 5, 460);
-                this.betaArrow.moveTo(this.viewGalaxy.x, 465);
-                this.betaArrow.lineTo(this.viewGalaxy.x + 5, 470);
-            } 
-            if (this.props.params.beta < 0) {   // right
-                this.betaArrow.lineTo(this.viewGalaxy.x - 5, 460);
-                this.betaArrow.moveTo(this.viewGalaxy.x, 465);
-                this.betaArrow.lineTo(this.viewGalaxy.x - 5, 470);
-            }
-
-            this.betaText.text = Number.parseFloat(this.props.params.beta).toFixed(2) + " arcseconds";
-
-            if (this.props.params.showLightAngle) {
-                this.rightLine.lineStyle(2, 0xa1a0da);
-                this.leftLine.lineStyle(2, 0xa1a0da);
-                this.rightArrow.lineStyle(2, 0xa1a0da);
-                this.leftArrow.lineStyle(2, 0xa1a0da);
-
-                this.rightLine.moveTo(this.botCluster.x, 525);
-                this.rightLine.lineTo(this.rightGalaxy.x, 525);
-                this.leftLine.moveTo(this.botCluster.x, 525);
-                this.leftLine.lineTo(this.leftGalaxy.x, 525);
-
-                this.rightArrow.moveTo(this.rightGalaxy.x, 525);
-                this.rightArrow.lineTo(this.rightGalaxy.x - 5, 520);
-                this.rightArrow.moveTo(this.rightGalaxy.x, 525);
-                this.rightArrow.lineTo(this.rightGalaxy.x - 5, 530);
-
-                this.leftArrow.moveTo(this.leftGalaxy.x, 525);
-                this.leftArrow.lineTo(this.leftGalaxy.x + 5, 520);
-                this.leftArrow.moveTo(this.leftGalaxy.x, 525);
-                this.leftArrow.lineTo(this.leftGalaxy.x + 5, 530);
-
-                this.leftText.text = Number.parseFloat(this.props.params.theta1).toFixed(2) + " arcseconds";
-                this.rightText.text = Number.parseFloat(this.props.params.theta2).toFixed(2) + " arcseconds";
-            }
+            this.betaArrow.lineTo(this.viewGalaxy.x + 5, 470);
+        } 
+        if (this.props.params.beta < 0) {   // right
+            this.betaArrow.lineTo(this.viewGalaxy.x - 5, 460);
+            this.betaArrow.moveTo(this.viewGalaxy.x, 465);
+            this.betaArrow.lineTo(this.viewGalaxy.x - 5, 470);
         }
+
+        this.betaText.text = Number.parseFloat(this.props.params.beta).toFixed(2) + " arcseconds";
+
+        if (this.props.params.showCluster && this.props.params.showLightAngle) {
+            this.rightLine.lineStyle(2, 0xa1a0da);
+            this.leftLine.lineStyle(2, 0xa1a0da);
+            this.rightArrow.lineStyle(2, 0xa1a0da);
+            this.leftArrow.lineStyle(2, 0xa1a0da);
+
+            this.rightLine.moveTo(this.botCluster.x, 525);
+            this.rightLine.lineTo(this.rightGalaxy.x, 525);
+            this.leftLine.moveTo(this.botCluster.x, 525);
+            this.leftLine.lineTo(this.leftGalaxy.x, 525);
+
+            this.rightArrow.moveTo(this.rightGalaxy.x, 525);
+            this.rightArrow.lineTo(this.rightGalaxy.x - 5, 520);
+            this.rightArrow.moveTo(this.rightGalaxy.x, 525);
+            this.rightArrow.lineTo(this.rightGalaxy.x - 5, 530);
+
+            this.leftArrow.moveTo(this.leftGalaxy.x, 525);
+            this.leftArrow.lineTo(this.leftGalaxy.x + 5, 520);
+            this.leftArrow.moveTo(this.leftGalaxy.x, 525);
+            this.leftArrow.lineTo(this.leftGalaxy.x + 5, 530);
+
+            this.leftText.text = Number.parseFloat(this.props.params.theta1).toFixed(2) + " arcseconds";
+            this.rightText.text = Number.parseFloat(this.props.params.theta2).toFixed(2) + " arcseconds";
+        }
+    
     }
 }

@@ -26,6 +26,7 @@ export default class SingleVariableControl extends React.Component {
                 <label>&nbsp;{this.props.minLabel}&nbsp;</label>
                 <input
                     type="range"
+                    id={this.props.id}
                     name={this.props.name}
                     min={this.props.min}
                     max={this.props.max}
