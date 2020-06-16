@@ -23,7 +23,7 @@ export default class ClusterControls extends React.Component {
                 </button>
                 <div className="controls">
                     <br/>
-                    <fieldset class="reset-this redo-fieldset">
+                    <fieldset className="reset-this redo-fieldset">
                         <br/>
                         <SingleVariableControl
                             name="sourceDist" 
@@ -84,47 +84,47 @@ export default class ClusterControls extends React.Component {
                             </React.Fragment>
                         }
                     </fieldset>
-                    <div class="toggle">
-                        <form class="directPath">
-                            <div class="custom-control custom-checkbox">
+                    <div className="toggle">
+                        <form className="directPath">
+                            <div className="custom-control custom-checkbox">
                                 <input 
                                     type="checkbox" 
-                                    class="custom-control-input" 
+                                    className="custom-control-input" 
                                     id="directPath"
                                     name="showDirectPath"
                                     onChange={this.changeDirectPath.bind(this)}
                                     checked={this.props.params.showDirectPath} 
                                 />
-                                <label class="custom-control-label" htmlFor="directPath">Display direct path to galaxy</label>
+                                <label className="custom-control-label" htmlFor="directPath">Display direct path to galaxy</label>
                             </div>
                         </form>
                         {
                             (this.props.params.showCluster) &&
                             <div>
-                                <form class="originalPath">
-                                    <div class="custom-control custom-checkbox">
+                                <form className="originalPath">
+                                    <div className="custom-control custom-checkbox">
                                         <input 
                                             type="checkbox" 
-                                            class="custom-control-input" 
+                                            className="custom-control-input" 
                                             id="originalPath" 
                                             name="showOriginalPath"
                                             onChange={this.changeOriginalPath.bind(this)}
                                             checked={this.props.params.showOriginalPath}
                                         />
-                                        <label class="custom-control-label" htmlFor="originalPath">Display original paths of light</label>
+                                        <label className="custom-control-label" htmlFor="originalPath">Display original paths of light</label>
                                     </div>
                                 </form>
-                                <form class="lightAngle">
-                                    <div class="custom-control custom-checkbox">
+                                <form className="lightAngle">
+                                    <div className="custom-control custom-checkbox">
                                         <input 
                                             type="checkbox" 
-                                            class="custom-control-input" 
+                                            className="custom-control-input" 
                                             id="lightAngle" 
                                             name="showLightAngle"
                                             onChange={this.changeLightAngle.bind(this)}
                                             checked={this.props.params.showLightAngle}
                                         />
-                                        <label class="custom-control-label" htmlFor="lightAngle">Display angles to observed light</label>
+                                        <label className="custom-control-label" htmlFor="lightAngle">Display angles to observed light</label>
                                     </div>
                                 </form>
                             </div>
@@ -190,7 +190,7 @@ ClusterControls.propTypes = {
         r1: PropTypes.number.isRequired,
         r2: PropTypes.number.isRequired,
         y1: PropTypes.number.isRequired,
-        y2: PropTypes.number.isRequired,
+        y2: PropTypes.number.isRequired
     }).isRequired,
     onChange: PropTypes.func.isRequired
 };

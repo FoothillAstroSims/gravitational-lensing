@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 export default class NavigationBar extends React.Component {
     constructor(props) {
@@ -13,7 +13,6 @@ export default class NavigationBar extends React.Component {
                     <h1 id="title"><strong>Gravitational Lensing by Cluster Simulator</strong></h1>
                     <nav>
                         <ul>
-                            {/* needs work */}
                             <li>
                                 <a href="#" onClick={this.props.onReset}>Reset</a>
                             </li>

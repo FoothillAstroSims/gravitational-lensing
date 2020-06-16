@@ -16,14 +16,14 @@ export default class GravitationalLensingSimulator extends React.Component {
                 showDirectPath: true,
                 showOriginalPath: false,
                 showLightAngle: false,
-                beta: 0.00,
+                beta: 0.0,
                 theta1: 34.57686,       // init values
                 theta2: -34.57686,      // init values
                 r1: 167633.236,         // init values
                 r2: -167633.236,        // init values
-                y1: 0.00,
-                y2: 0.00,
-                // phi: 0.00018626         // init values
+                y1: 0.0,
+                y2: 0.0,
+                // phi: 0.000186         // init values
             }   
         };
         this.state = this.initialState;
@@ -62,12 +62,12 @@ export default class GravitationalLensingSimulator extends React.Component {
                         />
                         <div id="data">
                             <p>&nbsp;Source distance:&nbsp;&nbsp;
-                                <span class="highlight">
+                                <span className="highlight">
                                     {this.state.parameters.sourceDist} billion light years
                                 </span>
                             </p>
                             <p>&nbsp;Source offset:&nbsp;&nbsp;
-                                <span class="highlight">
+                                <span className="highlight">
                                     {this.state.parameters.sourceOffset != 0 ? (this.state.parameters.sourceOffset > 0 ? this.state.parameters.sourceOffset + " thousand light years (left)" : this.state.parameters.sourceOffset + " thousand light years (right)") : "0 thousand light years"}
                                 </span>
                             </p>
@@ -75,19 +75,19 @@ export default class GravitationalLensingSimulator extends React.Component {
                                 this.state.parameters.showCluster &&
                                 <div>
                                     <p>&nbsp;Cluster distance:&nbsp;&nbsp;
-                                        <span class="highlight">
+                                        <span className="highlight">
                                             {this.state.parameters.clusterDist + " billion light years"}
                                         </span>
                                     </p>
                                     <p>&nbsp;Cluster mass:&nbsp;&nbsp;
-                                        <span class="highlight">
+                                        <span className="highlight">
                                             {this.state.parameters.clusterMass + " trillion solar masses"}
                                         </span>
                                     </p>
                                 </div>
                             }
                             {/* <p>&nbsp;Source offset angle &#40;beta&#41;:&nbsp;
-                                <span class="highlight">
+                                <span className="highlight">
                                     {Number.parseFloat(this.state.parameters.beta).toFixed(2)} arcseconds
                                 </span>
                             </p> */}
@@ -96,39 +96,39 @@ export default class GravitationalLensingSimulator extends React.Component {
                             (this.state.parameters.showCluster && this.state.parameters.showOriginalPath) &&
                             <div id="debug">
                                 {/* <p>&nbsp;theta 1:&nbsp;
-                                    <span class="highlight">
+                                    <span className="highlight">
                                         {Number.parseFloat(this.state.parameters.theta1).toFixed(3)} arcseconds
                                     </span>
                                 </p>
                                 <p>&nbsp;theta 2:&nbsp;
-                                    <span class="highlight">
+                                    <span className="highlight">
                                         {Number.parseFloat(this.state.parameters.theta2).toFixed(3)} arcseconds
                                     </span>
                                 </p> */}
                                 {/* <p>&nbsp;r1:&nbsp;
-                                    <span class="highlight">
+                                    <span className="highlight">
                                         {Number.parseFloat(this.state.parameters.r1 / 1000).toFixed(3)} thousand light years
                                     </span>
                                 </p>
                                 <p>&nbsp;r2:&nbsp;
-                                    <span class="highlight">
+                                    <span className="highlight">
                                         {Number.parseFloat(this.state.parameters.r2 / 1000).toFixed(3)} thousand light years
                                     </span>
                                 </p>
                                 <p>&nbsp;phi:&nbsp;
-                                    <span class="highlight">
-                                        {Number.parseFloat(this.state.parameters.phi).toFixed(8)} radians
+                                    <span className="highlight">
+                                        {Number.parseFloat(this.state.parameters.phi).toFixed(6)} radians
                                     </span>
                                 </p> */}
                                 {
                                     // (this.state.parameters.showOriginalPath && this.state.parameters.showCluster) &&
                                     <p>&nbsp;Original ray offset:<br/>
-                                        <span class="highlight">
-                                            &nbsp;{Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(2)} thousand light years &#40;left&#41;
+                                        <span className="highlight">
+                                            &nbsp;{Number.parseFloat(this.state.parameters.y1 / 1000).toFixed(1)} thousand light years &#40;left&#41;
                                         </span>
                                         <br/>
-                                        <span class="highlight">
-                                            &nbsp;{Number.parseFloat(this.state.parameters.y2 / 1000).toFixed(2)} thousand light years &#40;right&#41;
+                                        <span className="highlight">
+                                            &nbsp;{Number.parseFloat(this.state.parameters.y2 / 1000).toFixed(1)} thousand light years &#40;right&#41;
                                         </span>
                                     </p>
                                 }
